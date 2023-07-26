@@ -7,10 +7,4 @@
         <RootNamespace>Wireguard.ServiceLibrary</RootNamespace>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Folder Include="Domains\" />
-      <Folder Include="Entities\" />
-      <Folder Include="Repositories\" />
-    </ItemGroup>
-
 </Project>
