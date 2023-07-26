@@ -1,13 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireguardWeb.Api", "WireguardWeb.Api\WireguardWeb.Api.csproj", "{C58897E4-F39B-47F0-9C61-3389FE17D812}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02592D2E-139B-4BC4-BBEF-FF1841A65468}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireguardWeb.ServiceLibrary", "WireguardWeb.ServiceLibrary\WireguardWeb.ServiceLibrary.csproj", "{F42D993C-E7A9-430E-B6CB-CA9480E29216}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{95AF265B-1A75-477B-AAE8-4428B336D7CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F7D1A5C3-4CC6-45A9-B517-210758BE9F0C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6DFC3441-D13B-48F1-977D-0B32BE838CD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireguardWeb.Api", "src\WireguardWeb.Api\WireguardWeb.Api.csproj", "{8707A11C-5C20-4D9F-9130-BD241B7A71A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireguardWeb.ServiceLibrary", "src\WireguardWeb.ServiceLibrary\WireguardWeb.ServiceLibrary.csproj", "{CCDB814E-3498-4CC1-98E1-85193822EDF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,13 +21,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C58897E4-F39B-47F0-9C61-3389FE17D812}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C58897E4-F39B-47F0-9C61-3389FE17D812}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C58897E4-F39B-47F0-9C61-3389FE17D812}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C58897E4-F39B-47F0-9C61-3389FE17D812}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F42D993C-E7A9-430E-B6CB-CA9480E29216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F42D993C-E7A9-430E-B6CB-CA9480E29216}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F42D993C-E7A9-430E-B6CB-CA9480E29216}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F42D993C-E7A9-430E-B6CB-CA9480E29216}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8707A11C-5C20-4D9F-9130-BD241B7A71A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8707A11C-5C20-4D9F-9130-BD241B7A71A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8707A11C-5C20-4D9F-9130-BD241B7A71A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8707A11C-5C20-4D9F-9130-BD241B7A71A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCDB814E-3498-4CC1-98E1-85193822EDF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCDB814E-3498-4CC1-98E1-85193822EDF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCDB814E-3498-4CC1-98E1-85193822EDF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCDB814E-3498-4CC1-98E1-85193822EDF4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8707A11C-5C20-4D9F-9130-BD241B7A71A7} = {95AF265B-1A75-477B-AAE8-4428B336D7CC}
+		{CCDB814E-3498-4CC1-98E1-85193822EDF4} = {95AF265B-1A75-477B-AAE8-4428B336D7CC}
 	EndGlobalSection
 EndGlobal

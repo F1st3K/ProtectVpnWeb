@@ -3,7 +3,7 @@
     image: wireguardweb.api
     build:
       context: .
-      dockerfile: WireguardWeb.Api/Dockerfile
+      dockerfile: src/WireguardWeb.Api/Dockerfile
     ports:
       - 5000:80
       - 5001:443
