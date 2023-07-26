@@ -10,6 +10,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F7D1A5C3-4CC6-45A9-B517-210758BE9F0C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6DFC3441-D13B-48F1-977D-0B32BE838CD1}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.sh = build\build.sh
+		build\build.bat = build\build.bat
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireguardWeb.Api", "src\WireguardWeb.Api\WireguardWeb.Api.csproj", "{8707A11C-5C20-4D9F-9130-BD241B7A71A7}"
 EndProject
