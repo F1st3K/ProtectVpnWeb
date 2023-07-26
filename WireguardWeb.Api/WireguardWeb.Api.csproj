@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
+      <ProjectReference Include="..\WireguardWeb.ServiceLibrary\WireguardWeb.ServiceLibrary.csproj" />
     </ItemGroup>
 
 </Project>
