@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Wireguard.ServiceLibrary.Domains;
-using Wireguard.ServiceLibrary.Entities;
+using WireguardWeb.Core.Entities;
 
 namespace WireguardWeb.Api.Controllers;
 
@@ -9,7 +9,7 @@ namespace WireguardWeb.Api.Controllers;
 public class ConnectionController : ControllerBase
 {
     [HttpGet]
-    public IActionResult AddNewConnection([FromQuery] WGConnectionEntity connectionEntity)
+    public IActionResult AddNewConnection([FromQuery] ConnectionEntity connectionEntity)
     {
         var businessLogic = new WGConnection();
         businessLogic.Save(connectionEntity);

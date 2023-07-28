@@ -1,11 +1,11 @@
-using Wireguard.ServiceLibrary.Entities;
+using WireguardWeb.Core.Entities;
 using Wireguard.ServiceLibrary.Repositories;
 
-namespace Wireguard.ServiceLibrary.Domains;
+namespace WireguardWeb.Core.Domains;
 
 public class WGConnection
 {
-    public void Save(WGConnectionEntity entity)
+    public void Save(ConnectionEntity entity)
     {
         //validate some staff
 
