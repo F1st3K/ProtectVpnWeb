@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WireguardWeb.ServiceLibrary\WireguardWeb.ServiceLibrary.csproj" />
+      <ProjectReference Include="..\WireguardWeb.Core\WireguardWeb.Core.csproj" />
     </ItemGroup>
 
 </Project>
