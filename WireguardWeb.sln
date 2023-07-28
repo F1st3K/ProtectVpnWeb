@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6DFC3441
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireguardWeb.Api", "src\WireguardWeb.Api\WireguardWeb.Api.csproj", "{8707A11C-5C20-4D9F-9130-BD241B7A71A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireguardWeb.Core", "src\WireguardWeb.Core\WireguardWeb.Core.csproj", "{CCDB814E-3498-4CC1-98E1-85193822EDF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireguardWeb.Core", "src\WireguardWeb.Core\WireguardWeb.Core.csproj", "{A4F93B16-9C25-48A7-A118-F9DF4B66CA0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,13 +29,13 @@ Global
 		{8707A11C-5C20-4D9F-9130-BD241B7A71A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8707A11C-5C20-4D9F-9130-BD241B7A71A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8707A11C-5C20-4D9F-9130-BD241B7A71A7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCDB814E-3498-4CC1-98E1-85193822EDF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCDB814E-3498-4CC1-98E1-85193822EDF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCDB814E-3498-4CC1-98E1-85193822EDF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCDB814E-3498-4CC1-98E1-85193822EDF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4F93B16-9C25-48A7-A118-F9DF4B66CA0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4F93B16-9C25-48A7-A118-F9DF4B66CA0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4F93B16-9C25-48A7-A118-F9DF4B66CA0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4F93B16-9C25-48A7-A118-F9DF4B66CA0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8707A11C-5C20-4D9F-9130-BD241B7A71A7} = {95AF265B-1A75-477B-AAE8-4428B336D7CC}
-		{CCDB814E-3498-4CC1-98E1-85193822EDF4} = {95AF265B-1A75-477B-AAE8-4428B336D7CC}
+		{A4F93B16-9C25-48A7-A118-F9DF4B66CA0A} = {95AF265B-1A75-477B-AAE8-4428B336D7CC}
 	EndGlobalSection
 EndGlobal
