@@ -8,9 +8,24 @@ namespace WireguardWeb.Api.Controllers;
 public class ConnectionController : ControllerBase
 {
     [HttpGet]
-    public IActionResult AddNewConnection([FromQuery] Connection connection)
+    public IActionResult GetAllConnection()
     {
 
         return Ok();
     }
+    
+    [HttpGet("{id}")]
+    public IActionResult GetConnection(string id)
+    {
+
+        return Ok(id);
+    }
+    
+    [HttpPost]
+    public IActionResult AddConnection([FromQuery] string id)
+    {
+
+        return Ok(id);
+    }
+    
 }
