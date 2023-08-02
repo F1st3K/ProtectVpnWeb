@@ -2,8 +2,13 @@ using WireguardWeb.Core.Entities.Base;
 
 namespace WireguardWeb.Core.Entities;
 
-public class User : Entity
+public class User : IEntity
 {
-    public User(int id)
-        : base(id) {}
+    public int Id { get; }
+
+    public User(
+        int id)
+    {
+        Id = id;
+    }
 }

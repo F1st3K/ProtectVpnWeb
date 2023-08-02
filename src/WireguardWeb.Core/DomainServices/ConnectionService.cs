@@ -1,12 +1,13 @@
-using WireguardWeb.Core.Repositories.ConnectionRepository;
+using WireguardWeb.Core.Entities;
+using WireguardWeb.Core.Repositories.Base;
 
 namespace WireguardWeb.Core.DomainServices;
 
 public class ConnectionService
 {
-    public IConnectionRepository ConnectionRepository { get; }
+    public IRepository<Connection> ConnectionRepository { get; }
 
-    public ConnectionService(IConnectionRepository connectionRepository)
+    public ConnectionService(IRepository<Connection> connectionRepository)
     {
         ConnectionRepository = connectionRepository;
     }
