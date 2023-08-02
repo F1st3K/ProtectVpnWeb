@@ -1,12 +1,13 @@
-using WireguardWeb.Core.Repositories.UserRepository;
+using WireguardWeb.Core.Entities;
+using WireguardWeb.Core.Repositories.Base;
 
 namespace WireguardWeb.Core.DomainServices;
 
 public class UserService
 {
-    public IUserRepository UserRepository { get; }
+    public IRepository<User> UserRepository { get; }
 
-    public UserService(IUserRepository userRepository)
+    public UserService(IRepository<User> userRepository)
     {
         UserRepository = userRepository;
     }

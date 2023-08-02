@@ -1,12 +1,14 @@
+using WireguardWeb.Core.Entities.Base;
+
 namespace WireguardWeb.Core.Entities;
 
-public class Connection
+public class Connection : IEntity
 {
-    public string Id { get; }
+    public int Id { get; }
     public string UserId { get; }
 
     public Connection(
-        string id,
+        int id,
         string userId)
     {
         Id = id;

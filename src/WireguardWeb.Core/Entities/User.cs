@@ -1,12 +1,19 @@
+using WireguardWeb.Core.Entities.Base;
+
 namespace WireguardWeb.Core.Entities;
 
-public class User
+public class User : IEntity, IUniqueNamed
 {
-    public string Id { get; }
+    public int Id { get; }
 
+    public string UniqueName { get; }
+    
     public User(
-        string id)
+        int id,
+        string uniqueName)
     {
         Id = id;
+        UniqueName = uniqueName;
     }
+
 }
