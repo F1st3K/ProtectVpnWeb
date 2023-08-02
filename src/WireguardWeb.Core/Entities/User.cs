@@ -1,12 +1,9 @@
+using WireguardWeb.Core.Entities.Base;
+
 namespace WireguardWeb.Core.Entities;
 
-public class User
+public class User : Entity
 {
-    public string Id { get; }
-
-    public User(
-        string id)
-    {
-        Id = id;
-    }
+    public User(int id)
+        : base(id) {}
 }
