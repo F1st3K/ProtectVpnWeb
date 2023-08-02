@@ -6,4 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Entities\" />
+      <Folder Include="ORM\" />
+      <Folder Include="Repositories\" />
+    </ItemGroup>
+
 </Project>
