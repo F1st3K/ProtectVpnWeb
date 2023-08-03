@@ -1,7 +1,7 @@
 namespace WireguardWeb.Data.Mappers;
 
-public interface IMapper<TD, TE>
+public interface IMapper<TDomain, TEntity>
 {
-    public TD ToDomain(TE entity);
-    public TE ToEntity(TD domain);
+    public TDomain ToDomain(TEntity entity);
+    public TEntity ToEntity(TDomain domain);
 }
