@@ -3,11 +3,12 @@ using WireguardWeb.Core.Repositories.Base;
 
 namespace WireguardWeb.Core.DomainServices;
 
-public class UserService
+public class UserService<TRepository> 
+    where TRepository : IRepository<User>
 {
-    public IRepository<User> UserRepository { get; }
+    public TRepository UserRepository { get; }
 
-    public UserService(IRepository<User> userRepository)
+    public UserService(TRepository userRepository)
     {
         UserRepository = userRepository;
     }
