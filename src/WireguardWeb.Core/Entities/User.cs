@@ -2,7 +2,7 @@ using WireguardWeb.Core.Entities.Interfaces;
 
 namespace WireguardWeb.Core.Entities;
 
-public sealed class User : IEntity, IUniqueNamed
+public sealed class User : IEntity, IHasUniqueName, IHasPassword
 {
     public int Id { get; }
 
