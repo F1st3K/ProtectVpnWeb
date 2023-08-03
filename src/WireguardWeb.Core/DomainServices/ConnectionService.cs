@@ -1,4 +1,5 @@
 using WireguardWeb.Core.Entities;
+using WireguardWeb.Core.Entities.Base;
 using WireguardWeb.Core.Repositories.Base;
 
 namespace WireguardWeb.Core.DomainServices;
