@@ -1,8 +1,6 @@
-using WireguardWeb.Core.Entities.Base;
+using WireguardWeb.Core.Entities.Interfaces;
 
-namespace WireguardWeb.Core.Repositories.Base;
-
-public interface IUniqNamedRepository<out TUniqueNamed> 
+namespace WireguardWeb.Core.Repositoriesblic interface IUniqNamedRepository<out TUniqueNamed> 
     where TUniqueNamed : IEntity, IUniqueNamed
 {
     public bool CheckNameUniqueness(string uname);

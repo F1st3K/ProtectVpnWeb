@@ -1,6 +1,6 @@
-using WireguardWeb.Core.Entities.Base;
+using WireguardWeb.Core.Entities.Interfaces;
 
-namespace WireguardWeb.Core.Repositories.Base;
+namespace WireguardWeb.Core.Repositories;
 
 public interface IRepository<TEntity> 
     where TEntity : IEntity

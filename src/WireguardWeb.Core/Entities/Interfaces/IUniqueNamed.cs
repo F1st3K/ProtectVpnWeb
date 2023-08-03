@@ -1,4 +1,4 @@
-namespace WireguardWeb.Core.Entities.Base;
+namespace WireguardWeb.Core.Entities.Interfaces;
 
 public interface IUniqueNamed
 {

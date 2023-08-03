@@ -1,8 +1,8 @@
-using WireguardWeb.Core.Entities.Base;
+using WireguardWeb.Core.Entities.Interfaces;
 
 namespace WireguardWeb.Core.Entities;
 
-public class Connection : IEntity
+public sealed class Connection : IEntity
 {
     public int Id { get; }
     public string UserId { get; }

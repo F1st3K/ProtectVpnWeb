@@ -1,9 +1,9 @@
 using WireguardWeb.Core.Entities;
-using WireguardWeb.Core.Repositories.Base;
+using WireguardWeb.Core.Repositories;
 
 namespace WireguardWeb.Core.DomainServices;
 
-public class UserService<TRepository> 
+public sealed class UserService<TRepository> 
     where TRepository : IRepository<User>, IUniqNamedRepository<User>
 {
     public TRepository UserRepository { get; }
