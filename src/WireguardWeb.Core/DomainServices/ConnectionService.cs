@@ -8,7 +8,7 @@ public class ConnectionService<TRepository>
     where TRepository : IRepository<Connection>
 {
     public TRepository ConnectionRepository { get; }
-
+    
     public ConnectionService(TRepository connectionRepository)
     {
         ConnectionRepository = connectionRepository;
