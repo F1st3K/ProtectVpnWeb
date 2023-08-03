@@ -1,19 +1,23 @@
-using WireguardWeb.Core.Entities.Base;
+using WireguardWeb.Core.Entities.Interfaces;
 
 namespace WireguardWeb.Core.Entities;
 
-public class User : IEntity, IUniqueNamed
+public sealed class User : IEntity, IHasUniqueName, IHasPassword
 {
     public int Id { get; }
 
     public string UniqueName { get; }
     
+    public string HashPassword { get; }
+    
     public User(
         int id,
-        string uniqueName)
+        string uniqueName,
+        string hashPassword)
     {
         Id = id;
         UniqueName = uniqueName;
+        HashPassword = hashPassword;
     }
 
 }

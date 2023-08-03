@@ -1,10 +1,9 @@
 using WireguardWeb.Core.Entities;
-using WireguardWeb.Core.Entities.Base;
-using WireguardWeb.Core.Repositories.Base;
+using WireguardWeb.Core.Repositories;
 
 namespace WireguardWeb.Core.DomainServices;
 
-public class ConnectionService<TRepository> 
+public sealed class ConnectionService<TRepository> 
     where TRepository : IRepository<Connection>
 {
     public TRepository ConnectionRepository { get; }
