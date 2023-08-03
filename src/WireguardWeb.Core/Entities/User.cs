@@ -8,12 +8,16 @@ public sealed class User : IEntity, IUniqueNamed
 
     public string UniqueName { get; }
     
+    public string HashPassword { get; }
+    
     public User(
         int id,
-        string uniqueName)
+        string uniqueName,
+        string hashPassword)
     {
         Id = id;
         UniqueName = uniqueName;
+        HashPassword = hashPassword;
     }
 
 }
