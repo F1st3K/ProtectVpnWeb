@@ -1,6 +1,6 @@
 namespace WireguardWeb.Core.Dto.User;
 
-public class GetUsersInRangeDto : IDto
+public sealed class GetUsersInRangeDto : IDto
 {
     public int StartIndex { get; set; }
     

@@ -29,6 +29,17 @@ public sealed class UserService<TRepository>
         UserRepository.Add(user);
     }
 
+    public User GetUser(GetUserDto dto)
+    {
+        if (dto.IsValid() == false)
+            throw new Exception("Invalid data");
+
+        if (UserRepository.CheckNameUniqueness(dto.UserName))
+            throw new Exception("Transferred UserName is not find");
+
+        return UserRepository.GetByUniqueName(dto.UserName);
+    }
+
     public User[] GetUsersInRange(GetUsersInRangeDto dto)
     {
         if (dto.IsValid() == false)
