@@ -7,6 +7,7 @@ public interface IRepository<TEntity>
 {
     public int Count { get; }
     public int GetNextId();
+    public bool CheckIdUniqueness(int id);
     public void Add(TEntity entity);
     public TEntity GetById(int id);
     public TEntity[] GetRange(int index, int count);

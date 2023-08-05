@@ -1,4 +1,3 @@
-using System.Runtime.Serialization.Json;
 using WireguardWeb.Core.Dto.User;
 using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Managers;
@@ -18,7 +17,7 @@ public sealed class UserService<TRepository>
 
     public void CreateUser(CreateUserDto dto, IHasher<User> hasher)
     {
-        if (dto.IsValid() == false)
+        if (dto.UserName == string.Empty || dto.Password == string.Empty)
             throw new Exception("Invalid data");
         
         if (UserRepository.CheckNameUniqueness(dto.UserName) == false)
@@ -29,26 +28,50 @@ public sealed class UserService<TRepository>
         UserRepository.Add(user);
     }
 
-    public User GetUser(GetUserDto dto)
+    public UserDto GetUser(string userName)
     {
-        if (dto.IsValid() == false)
+        if (userName == string.Empty)
             throw new Exception("Invalid data");
 
-        if (UserRepository.CheckNameUniqueness(dto.UserName))
+        if (UserRepository.CheckNameUniqueness(userName))
             throw new Exception("Transferred UserName is not find");
 
-        return UserRepository.GetByUniqueName(dto.UserName);
-    }
+        var user = UserRepository.GetByUniqueName(userName);
 
-    public User[] GetUsersInRange(GetUsersInRangeDto dto)
+        return user.ToDto();
+    }
+    
+    public UserDto GetUser(int id)
     {
-        if (dto.IsValid() == false)
+        if (id < 0)
             throw new Exception("Invalid data");
 
-        if (dto.StartIndex + dto.Count > UserRepository.Count)
-            throw new Exception($"Transferred startIndex and count:{dto.StartIndex + dto.Count}" +
+        if (UserRepository.CheckIdUniqueness(id))
+            throw new Exception("Transferred Id is not find");
+
+        var user = UserRepository.GetById(id);
+
+        return user.ToDto();
+    }
+
+    public UserDto[] GetUsersInRange(int startIndex, int count)
+    {
+        if (startIndex < 0 || count <= 0)
+            throw new Exception("Invalid data");
+
+        if (startIndex + count > UserRepository.Count)
+            throw new Exception($"Transferred startIndex and count:{startIndex + count}" +
                                 $" was more than there are count users:{UserRepository.Count}");
 
-        return UserRepository.GetRange(dto.StartIndex, dto.Count);
+        var users = UserRepository.GetRange(startIndex, count);
+        
+        var usersDto = new UserDto[users.Length];
+        for (int i = 0; i < users.Length; i++)
+        {
+            usersDto[i] = users[i].ToDto();
+        }
+        return usersDto;
     }
+    
+    
 }
