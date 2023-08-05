@@ -7,9 +7,9 @@ public sealed class User : IEntity, IHasDto<UserDto>, IHasUniqueName, IHasPasswo
 {
     public int Id { get; }
 
-    public string UniqueName { get; }
+    public string UniqueName { get; private set; }
     
-    public string HashPassword { get; }
+    public string HashPassword { get; private set; }
     
     public User(
         int id,
@@ -28,5 +28,10 @@ public sealed class User : IEntity, IHasDto<UserDto>, IHasUniqueName, IHasPasswo
             Id = Id,
             UniqueName = UniqueName
         };
+    }
+
+    public void ChangeOf(UserDto dto)
+    {
+        UniqueName = dto.UniqueName;
     }
 }

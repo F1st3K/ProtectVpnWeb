@@ -73,5 +73,37 @@ public sealed class UserService<TRepository>
         return usersDto;
     }
     
+    public void EditUser(string userName, UserDto dto)
+    {
+        if (userName == string.Empty)
+            throw new Exception("Invalid data");
+
+        if (UserRepository.CheckNameUniqueness(userName))
+            throw new Exception("Transferred UserName is not find");
+
+        var user = UserRepository.GetByUniqueName(userName);
+        
+        if (user.Id != dto.Id)
+            throw new Exception("Id is not be changed");
+        
+        user.ChangeOf(dto);
+        UserRepository.Update(user);
+    }
     
+    public void EditUser(int id, UserDto dto)
+    {
+        if (id < 0)
+            throw new Exception("Invalid data");
+
+        if (UserRepository.CheckIdUniqueness(id))
+            throw new Exception("Transferred Id is not find");
+
+        var user = UserRepository.GetById(id);
+
+        if (user.Id != dto.Id)
+            throw new Exception("Id is not be changed");
+        
+        user.ChangeOf(dto);
+        UserRepository.Update(user);
+    }
 }
