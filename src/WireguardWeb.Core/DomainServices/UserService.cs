@@ -1,6 +1,5 @@
 using WireguardWeb.Core.Dto.User;
 using WireguardWeb.Core.Entities;
-using WireguardWeb.Core.Managers;
 using WireguardWeb.Core.Repositories;
 
 namespace WireguardWeb.Core.DomainServices;
@@ -13,19 +12,6 @@ public sealed class UserService<TRepository>
     public UserService(TRepository userRepository)
     {
         UserRepository = userRepository;
-    }
-
-    public void CreateUser(CreateUserDto dto, IHasher<User> hasher)
-    {
-        if (dto.UserName == string.Empty || dto.Password == string.Empty)
-            throw new Exception("Invalid data");
-        
-        if (UserRepository.CheckNameUniqueness(dto.UserName) == false)
-            throw new Exception("Transferred UserName is not unique");
-
-        var pwdHash = hasher.GetHash(dto.Password);
-        var user = new User(UserRepository.GetNextId(), dto.UserName, pwdHash);
-        UserRepository.Add(user);
     }
 
     public UserDto GetUser(string userName)
