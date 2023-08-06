@@ -3,17 +3,17 @@ using WireguardWeb.Core.Entities.Interfaces;
 
 namespace WireguardWeb.Core.Entities;
 
-public sealed class User : IEntity, IHasDto<UserDto>, IHasUniqueName, IHasPassword
+public sealed class User : IEntity, ITransfer<UserDto>, IHasUniqueName, IHasPassword
 {
     public int Id { get; }
 
-    public string UniqueName { get; private set; }
+    public string? UniqueName { get; private set; }
     
     public string HashPassword { get; private set; }
     
     public User(
         int id,
-        string uniqueName,
+        string? uniqueName,
         string hashPassword)
     {
         Id = id;
@@ -21,7 +21,7 @@ public sealed class User : IEntity, IHasDto<UserDto>, IHasUniqueName, IHasPasswo
         HashPassword = hashPassword;
     }
 
-    public UserDto ToDto()
+    public UserDto ToTransfer()
     {
         return new UserDto
         {

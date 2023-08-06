@@ -1,6 +1,6 @@
 namespace WireguardWeb.Core.Dto.User;
 
-public class ChangePwdUser
+public sealed class ChangePwdUser
 {
     public string Password { get; set; }
     

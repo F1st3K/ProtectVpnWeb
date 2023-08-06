@@ -24,7 +24,7 @@ public sealed class UserService<TRepository>
 
         var user = UserRepository.GetByUniqueName(userName);
 
-        return user.ToDto();
+        return user.ToTransfer();
     }
     
     public UserDto GetUser(int id)
@@ -37,7 +37,7 @@ public sealed class UserService<TRepository>
 
         var user = UserRepository.GetById(id);
 
-        return user.ToDto();
+        return user.ToTransfer();
     }
 
     public UserDto[] GetUsersInRange(int startIndex, int count)
@@ -54,7 +54,7 @@ public sealed class UserService<TRepository>
         var usersDto = new UserDto[users.Length];
         for (int i = 0; i < users.Length; i++)
         {
-            usersDto[i] = users[i].ToDto();
+            usersDto[i] = users[i].ToTransfer();
         }
         return usersDto;
     }
