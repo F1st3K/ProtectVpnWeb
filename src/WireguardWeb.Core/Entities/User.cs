@@ -7,13 +7,13 @@ public sealed class User : IEntity, ITransfer<UserDto>, IHasUniqueName, IHasPass
 {
     public int Id { get; }
 
-    public string UniqueName { get; private set; }
+    public string? UniqueName { get; private set; }
     
     public string HashPassword { get; private set; }
     
     public User(
         int id,
-        string uniqueName,
+        string? uniqueName,
         string hashPassword)
     {
         Id = id;
