@@ -1,8 +1,9 @@
+using WireguardWeb.Core.Dto.Connection;
 using WireguardWeb.Core.Entities.Interfaces;
 
 namespace WireguardWeb.Core.Entities;
 
-public sealed class Connection : IEntity
+public sealed class Connection : IEntity, IHasDto<ConnectionDto>
 {
     public int Id { get; }
     public string UserId { get; }
@@ -13,5 +14,18 @@ public sealed class Connection : IEntity
     {
         Id = id;
         UserId = userId;
+    }
+
+    public ConnectionDto ToDto()
+    {
+        return new ConnectionDto
+        {
+            
+        };
+    }
+
+    public void ChangeOf(ConnectionDto dto)
+    {
+        
     }
 }
