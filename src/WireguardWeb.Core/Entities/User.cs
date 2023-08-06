@@ -1,14 +1,15 @@
+using WireguardWeb.Core.Dto.User;
 using WireguardWeb.Core.Entities.Interfaces;
 
 namespace WireguardWeb.Core.Entities;
 
-public sealed class User : IEntity, IHasUniqueName, IHasPassword
+public sealed class User : IEntity, IHasDto<UserDto>, IHasUniqueName, IHasPassword
 {
     public int Id { get; }
 
-    public string UniqueName { get; }
+    public string UniqueName { get; private set; }
     
-    public string HashPassword { get; }
+    public string HashPassword { get; private set; }
     
     public User(
         int id,
@@ -20,4 +21,17 @@ public sealed class User : IEntity, IHasUniqueName, IHasPassword
         HashPassword = hashPassword;
     }
 
+    public UserDto ToDto()
+    {
+        return new UserDto
+        {
+            Id = Id,
+            UniqueName = UniqueName
+        };
+    }
+
+    public void ChangeOf(UserDto dto)
+    {
+        UniqueName = dto.UniqueName;
+    }
 }
