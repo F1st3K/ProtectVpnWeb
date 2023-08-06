@@ -3,7 +3,7 @@ using WireguardWeb.Core.Entities.Interfaces;
 
 namespace WireguardWeb.Core.Entities;
 
-public sealed class Connection : IEntity, IHasDto<ConnectionDto>
+public sealed class Connection : IEntity, ITransfer<ConnectionDto>
 {
     public int Id { get; }
     public string UserId { get; }
@@ -16,7 +16,7 @@ public sealed class Connection : IEntity, IHasDto<ConnectionDto>
         UserId = userId;
     }
 
-    public ConnectionDto ToDto()
+    public ConnectionDto ToTransfer()
     {
         return new ConnectionDto
         {
