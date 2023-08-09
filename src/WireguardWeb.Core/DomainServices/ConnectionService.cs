@@ -51,7 +51,7 @@ public sealed class ConnectionService<TRepository, TClientConnection>
         return connection.ToTransfer();
     }
 
-    public ConnectionDto[] GetUsersInRange(int startIndex, int count)
+    public ConnectionDto[] GetConnectionsInRange(int startIndex, int count)
     {
         if (startIndex < 0 || count <= 0)
             throw new Exception("Invalid data");
