@@ -1,6 +1,7 @@
 using WireguardWeb.Core.Dto.Connection;
 using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Entities.Interfaces;
+using WireguardWeb.Core.Exceptions;
 using WireguardWeb.Core.Managers;
 using WireguardWeb.Core.Repositories;
 
@@ -41,10 +42,12 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     public ConnectionDto GetConnection(int id)
     {
         if (id < 0)
-            throw new Exception("Invalid data");
+            throw new InvalidArgumentException(
+                new ArgumentParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new Exception("Transferred Id is not find");
+            throw new IdNotFoundException(
+                new ArgumentParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
 
@@ -54,11 +57,14 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     public ConnectionDto[] GetConnectionsInRange(int startIndex, int count)
     {
         if (startIndex < 0 || count <= 0)
-            throw new Exception("Invalid data");
+            throw new InvalidArgumentException(
+                new ArgumentParameter(startIndex, nameof(startIndex)),
+                new ArgumentParameter(count, nameof(count)));
 
         if (startIndex + count > ConnectionRepository.Count)
-            throw new Exception($"Transferred startIndex and count:{startIndex + count}" +
-                                $" was more than there are count users:{ConnectionRepository.Count}");
+            throw new RangeException(
+                new ArgumentParameter(startIndex+count, nameof(startIndex) + "+" + nameof(count)),
+                new ArgumentParameter(ConnectionRepository.Count, nameof(ConnectionRepository.Count)));
 
         var connections = ConnectionRepository.GetRange(startIndex, count);
         
@@ -72,11 +78,12 @@ public sealed class ConnectionService<TRepository, TClientConnection>
 
     public void CreateConnection(CreateConnectionDto dto)
     {
-        if (VpnManager.ServerIsActive == false)
-            throw new Exception("Vpn server is not running");
-
         if (dto.UserId < 0)
-            throw new Exception("Invalid data");
+            throw new InvalidArgumentException(
+            new ArgumentParameter(dto.UserId, nameof(dto.UserId)));
+        
+        if (VpnManager.ServerIsActive == false)
+            throw new NotRunningException(nameof(VpnManager));
 
         string info = VpnManager.GenerateConnectionInfo();
         var newConnection = new Connection(ConnectionRepository.GetNextId(), dto.UserId, info);
@@ -86,15 +93,19 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     public void EditConnection(int id, ConnectionDto dto)
     {
         if (id < 0)
-            throw new Exception("Invalid data");
+            throw new InvalidArgumentException(
+                new ArgumentParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new Exception("Transferred Id is not find");
+            throw new IdNotFoundException(
+            new ArgumentParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
 
         if (connection.Id != dto.Id)
-            throw new Exception("Id is not be changed");
+            throw new NonIdenticalException(
+                new ArgumentParameter(connection.Id, nameof(connection.Id)),
+                    new ArgumentParameter(dto.Id, nameof(dto.Id)));
         
         connection.ChangeOf(dto);
         ConnectionRepository.Update(connection); 
@@ -107,10 +118,12 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     public void RemoveConnection(int id)
     {
         if (id < 0)
-            throw new Exception("Invalid data");
+            throw new InvalidArgumentException(
+                new ArgumentParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new Exception("Transferred Id is not find");
+            throw new IdNotFoundException(
+                new ArgumentParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
         
