@@ -1,11 +1,11 @@
 namespace WireguardWeb.Core.Exceptions;
 
-public struct ArgumentParameter
+public struct ExceptionParameter
 {
     public object Param { get; }
     public string Name { get; }
 
-    public ArgumentParameter(object param, string name)
+    public ExceptionParameter(object param, string name)
     {
         Param = param;
         Name = name;

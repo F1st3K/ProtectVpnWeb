@@ -19,11 +19,11 @@ public sealed class UserService<TRepository>
     {
         if (userName == string.Empty)
             throw new InvalidArgumentException(
-                new ArgumentParameter(userName, nameof(userName)));
+                new ExceptionParameter(userName, nameof(userName)));
 
         if (UserRepository.CheckNameUniqueness(userName))
             throw new UserNameNotFoundException(
-                new ArgumentParameter(userName, nameof(userName)));
+                new ExceptionParameter(userName, nameof(userName)));
 
         var user = UserRepository.GetByUniqueName(userName);
 
@@ -34,11 +34,11 @@ public sealed class UserService<TRepository>
     {
         if (id < 0)
             throw new InvalidArgumentException(
-                new ArgumentParameter(id, nameof(id)));
+                new ExceptionParameter(id, nameof(id)));
 
         if (UserRepository.CheckIdUniqueness(id))
             throw new IdNotFoundException(
-                new ArgumentParameter(id, nameof(id)));
+                new ExceptionParameter(id, nameof(id)));
 
         var user = UserRepository.GetById(id);
 
@@ -49,13 +49,13 @@ public sealed class UserService<TRepository>
     {
         if (startIndex < 0 || count <= 0)
             throw new InvalidArgumentException(
-                new ArgumentParameter(startIndex, nameof(startIndex)),
-                new ArgumentParameter(count, nameof(count)));
+                new ExceptionParameter(startIndex, nameof(startIndex)),
+                new ExceptionParameter(count, nameof(count)));
 
         if (startIndex + count > UserRepository.Count)
             throw new RangeException(
-                new ArgumentParameter(startIndex+count, nameof(startIndex) + " " + nameof(count)),
-                new ArgumentParameter(UserRepository.Count, nameof(UserRepository.Count)));
+                new ExceptionParameter(startIndex+count, nameof(startIndex) + "+" + nameof(count)),
+                new ExceptionParameter(UserRepository.Count, nameof(UserRepository.Count)));
 
         var users = UserRepository.GetRange(startIndex, count);
         
@@ -71,18 +71,18 @@ public sealed class UserService<TRepository>
     {
         if (userName == string.Empty)
             throw new InvalidArgumentException(
-                new ArgumentParameter(userName, nameof(userName)));
+                new ExceptionParameter(userName, nameof(userName)));
 
         if (UserRepository.CheckNameUniqueness(userName))
             throw new UserNameNotFoundException(
-                new ArgumentParameter(userName, nameof(userName)));
+                new ExceptionParameter(userName, nameof(userName)));
 
         var user = UserRepository.GetByUniqueName(userName);
         
         if (user.Id != dto.Id)
             throw new NonIdenticalException(
-                new ArgumentParameter(user.Id, nameof(user.Id)),
-                new ArgumentParameter(dto.Id, nameof(dto.Id)));
+                new ExceptionParameter(user.Id, nameof(user.Id)),
+                new ExceptionParameter(dto.Id, nameof(dto.Id)));
         
         user.ChangeOf(dto);
         UserRepository.Update(user);
@@ -92,18 +92,18 @@ public sealed class UserService<TRepository>
     {
         if (id < 0)
             throw new InvalidArgumentException(
-                new ArgumentParameter(id, nameof(id)));
+                new ExceptionParameter(id, nameof(id)));
 
         if (UserRepository.CheckIdUniqueness(id))
             throw new IdNotFoundException(
-                new ArgumentParameter(id, nameof(id)));
+                new ExceptionParameter(id, nameof(id)));
 
         var user = UserRepository.GetById(id);
 
         if (user.Id != dto.Id)
             throw new NonIdenticalException(
-                new ArgumentParameter(user.Id, nameof(user.Id)),
-                new ArgumentParameter(dto.Id, nameof(dto.Id)));
+                new ExceptionParameter(user.Id, nameof(user.Id)),
+                new ExceptionParameter(dto.Id, nameof(dto.Id)));
         
         user.ChangeOf(dto);
         UserRepository.Update(user);

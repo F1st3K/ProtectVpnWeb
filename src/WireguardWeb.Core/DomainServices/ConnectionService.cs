@@ -43,11 +43,11 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     {
         if (id < 0)
             throw new InvalidArgumentException(
-                new ArgumentParameter(id, nameof(id)));
+                new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
             throw new IdNotFoundException(
-                new ArgumentParameter(id, nameof(id)));
+                new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
 
@@ -58,13 +58,13 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     {
         if (startIndex < 0 || count <= 0)
             throw new InvalidArgumentException(
-                new ArgumentParameter(startIndex, nameof(startIndex)),
-                new ArgumentParameter(count, nameof(count)));
+                new ExceptionParameter(startIndex, nameof(startIndex)),
+                new ExceptionParameter(count, nameof(count)));
 
         if (startIndex + count > ConnectionRepository.Count)
             throw new RangeException(
-                new ArgumentParameter(startIndex+count, nameof(startIndex) + "+" + nameof(count)),
-                new ArgumentParameter(ConnectionRepository.Count, nameof(ConnectionRepository.Count)));
+                new ExceptionParameter(startIndex+count, nameof(startIndex) + "+" + nameof(count)),
+                new ExceptionParameter(ConnectionRepository.Count, nameof(ConnectionRepository.Count)));
 
         var connections = ConnectionRepository.GetRange(startIndex, count);
         
@@ -80,7 +80,7 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     {
         if (dto.UserId < 0)
             throw new InvalidArgumentException(
-            new ArgumentParameter(dto.UserId, nameof(dto.UserId)));
+            new ExceptionParameter(dto.UserId, nameof(dto.UserId)));
         
         if (VpnManager.ServerIsActive == false)
             throw new NotRunningException(nameof(VpnManager));
@@ -94,18 +94,18 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     {
         if (id < 0)
             throw new InvalidArgumentException(
-                new ArgumentParameter(id, nameof(id)));
+                new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
             throw new IdNotFoundException(
-            new ArgumentParameter(id, nameof(id)));
+            new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
 
         if (connection.Id != dto.Id)
             throw new NonIdenticalException(
-                new ArgumentParameter(connection.Id, nameof(connection.Id)),
-                    new ArgumentParameter(dto.Id, nameof(dto.Id)));
+                new ExceptionParameter(connection.Id, nameof(connection.Id)),
+                    new ExceptionParameter(dto.Id, nameof(dto.Id)));
         
         connection.ChangeOf(dto);
         ConnectionRepository.Update(connection); 
@@ -119,11 +119,11 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     {
         if (id < 0)
             throw new InvalidArgumentException(
-                new ArgumentParameter(id, nameof(id)));
+                new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
             throw new IdNotFoundException(
-                new ArgumentParameter(id, nameof(id)));
+                new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
         
