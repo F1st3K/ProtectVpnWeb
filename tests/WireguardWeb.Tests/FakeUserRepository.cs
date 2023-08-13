@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Repositories;
 

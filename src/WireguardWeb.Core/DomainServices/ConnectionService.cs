@@ -31,11 +31,12 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
         
         VpnManager.StartServer();
         
-        var connections = ConnectionRepository.GetRange(0, ConnectionRepository.Count);
-        foreach (var connection in connections)
+        var connections = 
+            ConnectionRepository.GetRange(0, ConnectionRepository.Count);
+        foreach (var c in connections)
         {
             var clientConnection = new TClientConnection();
-            clientConnection.ChangeOf(connection);
+            clientConnection.ChangeOf(c);
             VpnManager.AddConnection(clientConnection);
         }
     }
@@ -64,8 +65,10 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
 
         if (startIndex + count > ConnectionRepository.Count)
             throw new RangeException(
-                new ExceptionParameter(startIndex+count, nameof(startIndex) + "+" + nameof(count)),
-                new ExceptionParameter(ConnectionRepository.Count, nameof(ConnectionRepository.Count)));
+                new ExceptionParameter(startIndex+count, 
+                    nameof(startIndex) + "+" + nameof(count)),
+                new ExceptionParameter(ConnectionRepository.Count, 
+                    nameof(ConnectionRepository.Count)));
 
         var connections = ConnectionRepository.GetRange(startIndex, count);
         
@@ -89,6 +92,11 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
         string info = VpnManager.GenerateConnectionInfo();
         var newConnection = new Connection(ConnectionRepository.GetNextId(), dto.UserId, info);
         ConnectionRepository.Add(newConnection);
+        
+        var newClientConnection = new TClientConnection();
+        newClientConnection.ChangeOf(newConnection);
+        VpnManager.AddConnection(newClientConnection);
+        
         return newConnection.ToTransfer();
     }
 

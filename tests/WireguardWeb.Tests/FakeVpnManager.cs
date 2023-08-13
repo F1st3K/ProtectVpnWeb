@@ -1,4 +1,3 @@
-using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Managers;
 
 namespace WireguardWeb.Tests;
@@ -51,11 +50,23 @@ public class FakeVpnManager : IVpnManager<FakeClientConnection>
 
     public void StopServer()
     {
+        Clear();
         ServerIsActive = false;
     }
 
     public void Clear()
     {
         _connections.Clear();
+    }
+
+    public FakeClientConnection GetById(int id)
+    {
+        foreach (var fc in _connections)
+        {
+            if (id == fc.Id)
+                return fc;
+        }
+
+        return null;
     }
 }

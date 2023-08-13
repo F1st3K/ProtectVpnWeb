@@ -25,6 +25,9 @@ public sealed class UserServiceTests
         _repository = new FakeUserRepository();
         _service = new UserService<FakeUserRepository>(_repository);
     }
+
+    private bool CheckInRepository(UserDto dto) =>
+        _repository.GetById(dto.Id).ToTransfer().AreEqual(dto);
     
     [Test]
     public async Task Get_Success()
@@ -39,6 +42,7 @@ public sealed class UserServiceTests
         {
             Assert.That(userOfUname.AreEqual(user), Is.True);
             Assert.That(userOfId.AreEqual(userOfUname), Is.True);
+            Assert.That(CheckInRepository(userOfId), Is.True);
         });
     }
 
@@ -56,7 +60,11 @@ public sealed class UserServiceTests
 
         Assert.That(userDtos, Has.Length.EqualTo(users.Length));
         for (int i = 0; i < userDtos.Length; i++)
-            Assert.That(userDtos[i].AreEqual(users[i]), Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(userDtos[i].AreEqual(users[i]), Is.True);
+                Assert.That(CheckInRepository(userDtos[i]), Is.True);
+            });
     }
 
     [Test]
@@ -74,6 +82,7 @@ public sealed class UserServiceTests
         {
             Assert.That(_service.GetUser(userOfId.Id).AreEqual(userOfId), Is.True);
             Assert.That(_service.GetUser(userOfUname.Id).AreEqual(userOfUname), Is.True);
+            Assert.That(CheckInRepository(userOfUname), Is.True);
         });
     }
 
@@ -99,12 +108,15 @@ public sealed class UserServiceTests
     {
         _repository.FakeInit(_fakeUsers);
 
-        Assert.Catch<InvalidArgumentException>(delegate { _service.GetUsersInRange(-1, 1); });
-        Assert.Catch<InvalidArgumentException>(delegate { _service.GetUsersInRange(0, 0); });
+        Assert.Catch<InvalidArgumentException>(delegate
+            { _service.GetUsersInRange(-1, 1); });
+        Assert.Catch<InvalidArgumentException>(delegate
+            { _service.GetUsersInRange(0, 0); });
 
         var startIndex = _repository.Count / 2;
         var count = _repository.Count - startIndex + 1;
-        Assert.Catch<RangeException>(delegate { _service.GetUsersInRange(startIndex, count); });
+        Assert.Catch<RangeException>(delegate
+            { _service.GetUsersInRange(startIndex, count); });
     }
 
     [Test]
@@ -118,8 +130,14 @@ public sealed class UserServiceTests
             UniqueName = "user1"
         };
 
-        Assert.Catch<InvalidArgumentException>(delegate { _service.EditUser(-1, dto); });
-        Assert.Catch<InvalidArgumentException>(delegate { _service.EditUser(string.Empty, dto); });
+        Assert.Catch<InvalidArgumentException>(delegate
+        {
+            _service.EditUser(-1, dto);
+        });
+        Assert.Catch<InvalidArgumentException>(delegate
+        {
+            _service.EditUser(string.Empty, dto);
+        });
 
 
         var id = _repository.Count;
