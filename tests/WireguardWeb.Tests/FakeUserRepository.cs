@@ -6,7 +6,7 @@ namespace WireguardWeb.Tests;
 
 public sealed class FakeUserRepository : IRepository<User>, IUniqueNameRepository<User>
 {
-    private List<User> _users = new List<User>();
+    private readonly List<User> _users = new();
 
     public int Count { get; private set; }
     public int GetNextId()
@@ -112,28 +112,11 @@ public sealed class FakeUserRepository : IRepository<User>, IUniqueNameRepositor
         }
     }
 
-    public void FakeInit()
+    public void FakeInit(User[] users)
     {
-        Add(new User(
-            0,
-            "user1",
-            "pwd1"));
-        Add(new User(
-            1,
-            "user2",
-            "pwd2"));
-        Add(new User(
-            2,
-            "user3",
-            "pwd3"));
-        Add(new User(
-            3,
-            "user4",
-            "pwd4"));
-        Add(new User(
-            4,
-            "user5",
-            "pwd5"));
+        Clear();
+        foreach (var u in users)
+            Add(u);
     }
     
     public void Clear()

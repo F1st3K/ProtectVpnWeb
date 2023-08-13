@@ -8,7 +8,7 @@ namespace WireguardWeb.Core.DomainServices;
 public sealed class UserService<TRepository> 
     where TRepository : IRepository<User>, IUniqueNameRepository<User>
 {
-    public TRepository UserRepository { get; }
+    private TRepository UserRepository { get; }
 
     public UserService(TRepository userRepository)
     {

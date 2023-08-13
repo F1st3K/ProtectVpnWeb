@@ -7,17 +7,18 @@ using WireguardWeb.Core.Repositories;
 
 namespace WireguardWeb.Core.DomainServices;
 
-public sealed class ConnectionService<TRepository, TClientConnection> 
+public sealed class ConnectionService<TRepository, TClientConnection, TVpnManager> 
     where TRepository : IRepository<Connection>
     where TClientConnection : ITransfer<Connection>, new()
+    where TVpnManager : IVpnManager<TClientConnection>
 {
-    public TRepository ConnectionRepository { get; }
+    private TRepository ConnectionRepository { get; }
     
-    public IVpnManager<TClientConnection> VpnManager { get; }
+    private TVpnManager VpnManager { get; }
     
     public ConnectionService(
         TRepository connectionRepository,
-        IVpnManager<TClientConnection> vpnManager)
+        TVpnManager vpnManager)
     {
         ConnectionRepository = connectionRepository;
         VpnManager = vpnManager;
@@ -76,7 +77,7 @@ public sealed class ConnectionService<TRepository, TClientConnection>
         return connectionsDto;
     }
 
-    public void CreateConnection(CreateConnectionDto dto)
+    public ConnectionDto CreateConnection(CreateConnectionDto dto)
     {
         if (dto.UserId < 0)
             throw new InvalidArgumentException(
@@ -88,6 +89,7 @@ public sealed class ConnectionService<TRepository, TClientConnection>
         string info = VpnManager.GenerateConnectionInfo();
         var newConnection = new Connection(ConnectionRepository.GetNextId(), dto.UserId, info);
         ConnectionRepository.Add(newConnection);
+        return newConnection.ToTransfer();
     }
 
     public void EditConnection(int id, ConnectionDto dto)

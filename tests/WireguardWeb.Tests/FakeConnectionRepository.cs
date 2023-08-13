@@ -5,7 +5,7 @@ namespace WireguardWeb.Tests;
 
 public sealed class FakeConnectionRepository : IRepository<Connection>
 {
-    private List<Connection> _connections;
+    private readonly List<Connection> _connections = new();
 
     public int Count { get; private set; }
     public int GetNextId()
@@ -73,5 +73,18 @@ public sealed class FakeConnectionRepository : IRepository<Connection>
                 return;
             }
         }
+    }
+
+    public void Clear()
+    {
+        _connections.Clear();
+        Count = 0;
+    }
+    
+    public void FakeInit(Connection[] connections)
+    {
+        Clear();
+        foreach (var c in connections)
+            Add(c);
     }
 }

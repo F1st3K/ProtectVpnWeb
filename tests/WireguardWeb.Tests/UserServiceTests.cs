@@ -1,6 +1,7 @@
 using WireguardWeb.Core.DomainServices;
 using WireguardWeb.Core.Dto;
 using WireguardWeb.Core.Dto.User;
+using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Exceptions;
 
 namespace WireguardWeb.Tests;
@@ -10,22 +11,30 @@ public sealed class UserServiceTests
     private readonly FakeUserRepository _repository;
     private readonly UserService<FakeUserRepository> _service;
 
+    private readonly User[] _fakeUsers =
+    {
+        new(0, "user1", "pwd1"),
+        new(1, "user2", "pwd2"),
+        new(2, "user3", "pwd3"),
+        new(3, "user4", "pwd4"),
+        new(4, "user5", "pwd5")
+    };
+
     public UserServiceTests()
     {
         _repository = new FakeUserRepository();
         _service = new UserService<FakeUserRepository>(_repository);
     }
-
+    
     [Test]
     public async Task Get_Success()
     {
-        _repository.Clear();
-        _repository.FakeInit();
-        var user = new UserDto { Id = 0, UniqueName = "user1" };
+        _repository.FakeInit(_fakeUsers);
+        var user = new UserDto { Id = 2, UniqueName = "user3" };
 
         var userOfId = _service.GetUser(user.Id);
         var userOfUname = _service.GetUser(user.UniqueName);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(userOfUname.AreEqual(user), Is.True);
@@ -36,16 +45,16 @@ public sealed class UserServiceTests
     [Test]
     public async Task GetRange_Success()
     {
-        _repository.Clear();
-        _repository.FakeInit();
+        _repository.FakeInit(_fakeUsers);
         var users = new UserDto[]
         {
-            new UserDto { Id = 3, UniqueName = "user4" },
-            new UserDto { Id = 4, UniqueName = "user5" }
+            new() { Id = 3, UniqueName = "user4" },
+            new() { Id = 4, UniqueName = "user5" }
         };
 
         var userDtos = _service.GetUsersInRange(3, 2);
-        
+
+        Assert.That(userDtos, Has.Length.EqualTo(users.Length));
         for (int i = 0; i < userDtos.Length; i++)
             Assert.That(userDtos[i].AreEqual(users[i]), Is.True);
     }
@@ -53,15 +62,14 @@ public sealed class UserServiceTests
     [Test]
     public async Task Edit_Success()
     {
-        _repository.Clear();
-        _repository.FakeInit();
+        _repository.FakeInit(_fakeUsers);
         var userOfId = new UserDto { Id = 0, UniqueName = "editUser1" };
         var userOfUname = new UserDto { Id = 1, UniqueName = "editUser2" };
         var expected = new UserDto { Id = 0, UniqueName = "user2" };
-        
+
         _service.EditUser(expected.Id, userOfId);
         _service.EditUser(expected.UniqueName, userOfUname);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(_service.GetUser(userOfId.Id).AreEqual(userOfId), Is.True);
@@ -72,8 +80,7 @@ public sealed class UserServiceTests
     [Test]
     public async Task Get_Exception()
     {
-        _repository.Clear();
-        _repository.FakeInit();
+        _repository.FakeInit(_fakeUsers);
 
         Assert.Catch<InvalidArgumentException>(delegate { _service.GetUser(-1); });
         Assert.Catch<InvalidArgumentException>(delegate { _service.GetUser(string.Empty); });
@@ -90,9 +97,8 @@ public sealed class UserServiceTests
     [Test]
     public async Task GetRange_Exception()
     {
-        _repository.Clear();
-        _repository.FakeInit();
-        
+        _repository.FakeInit(_fakeUsers);
+
         Assert.Catch<InvalidArgumentException>(delegate { _service.GetUsersInRange(-1, 1); });
         Assert.Catch<InvalidArgumentException>(delegate { _service.GetUsersInRange(0, 0); });
 
@@ -104,19 +110,18 @@ public sealed class UserServiceTests
     [Test]
     public async Task Edit_Exception()
     {
-        _repository.Clear();
-        _repository.FakeInit();
+        _repository.FakeInit(_fakeUsers);
 
         var dto = new UserDto
         {
             Id = 0,
             UniqueName = "user1"
         };
-        
+
         Assert.Catch<InvalidArgumentException>(delegate { _service.EditUser(-1, dto); });
         Assert.Catch<InvalidArgumentException>(delegate { _service.EditUser(string.Empty, dto); });
-        
-        
+
+
         var id = _repository.Count;
         while (_repository.CheckIdUniqueness(id) == false) id++;
         Assert.Catch<IdNotFoundException>(delegate { _service.EditUser(id, dto); });
