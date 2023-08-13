@@ -1,24 +1,24 @@
 using WireguardWeb.Core.Managers;
 
-namespace WireguardWeb.Tests;
+namespace WireguardWeb.Tests.ConnectionService;
 
-public class FakeVpnManager : IVpnManager<FakeClientConnection>
+public class MockVpnManager : IVpnManager<MockClientConnection>
 {
     public bool ServerIsActive { get; private set; }
     
-    private readonly List<FakeClientConnection> _connections = new();
+    private readonly List<MockClientConnection> _connections = new();
 
     public void StartServer()
     {
         ServerIsActive = true;
     }
 
-    public void AddConnection(FakeClientConnection connection)
+    public void AddConnection(MockClientConnection connection)
     {
         _connections.Add(connection);
     }
 
-    public void UpdateConnection(FakeClientConnection connection)
+    public void UpdateConnection(MockClientConnection connection)
     {
         foreach (var c in _connections)
         {
@@ -31,7 +31,7 @@ public class FakeVpnManager : IVpnManager<FakeClientConnection>
         }
     }
 
-    public void RemoveConnection(FakeClientConnection connection)
+    public void RemoveConnection(MockClientConnection connection)
     {
         foreach (var c in _connections)
         {
@@ -59,7 +59,7 @@ public class FakeVpnManager : IVpnManager<FakeClientConnection>
         _connections.Clear();
     }
 
-    public FakeClientConnection GetById(int id)
+    public MockClientConnection GetById(int id)
     {
         foreach (var fc in _connections)
         {

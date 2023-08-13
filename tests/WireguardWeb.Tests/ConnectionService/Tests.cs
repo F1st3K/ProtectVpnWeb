@@ -4,14 +4,14 @@ using WireguardWeb.Core.Dto.Connection;
 using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Exceptions;
 
-namespace WireguardWeb.Tests;
+namespace WireguardWeb.Tests.ConnectionService;
 
-public class ConnectionServiceTests
+public class Tests
 {
-    private readonly FakeConnectionRepository _repository;
-    private readonly FakeVpnManager _vpnManager;
+    private readonly MockConnectionRepository _repository;
+    private readonly MockVpnManager _vpnManager;
     private readonly ConnectionService<
-        FakeConnectionRepository, FakeClientConnection, FakeVpnManager> _service;
+        MockConnectionRepository, MockClientConnection, MockVpnManager> _service;
 
     private readonly Connection[] _fakeConnections =
     {
@@ -24,12 +24,12 @@ public class ConnectionServiceTests
         new(6, 1, "IP=7")
     };
 
-    public ConnectionServiceTests()
+    public Tests()
     {
-        _repository = new FakeConnectionRepository();
-        _vpnManager = new FakeVpnManager();
+        _repository = new MockConnectionRepository();
+        _vpnManager = new MockVpnManager();
         _service = new ConnectionService<
-            FakeConnectionRepository, FakeClientConnection, FakeVpnManager>
+            MockConnectionRepository, MockClientConnection, MockVpnManager>
             (_repository, _vpnManager);
     }
 

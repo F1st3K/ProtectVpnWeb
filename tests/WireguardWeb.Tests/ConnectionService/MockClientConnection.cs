@@ -1,9 +1,9 @@
 using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Entities.Interfaces;
 
-namespace WireguardWeb.Tests;
+namespace WireguardWeb.Tests.ConnectionService;
 
-public class FakeClientConnection : ITransfer<Connection>
+public class MockClientConnection : ITransfer<Connection>
 {
     public int Id { get; private set; }
     

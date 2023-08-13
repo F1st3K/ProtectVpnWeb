@@ -1,9 +1,9 @@
 using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Repositories;
 
-namespace WireguardWeb.Tests;
+namespace WireguardWeb.Tests.UserService;
 
-public sealed class FakeUserRepository : IRepository<User>, IUniqueNameRepository<User>
+public sealed class MockUserRepository : IRepository<User>, IUniqueNameRepository<User>
 {
     private readonly List<User> _users = new();
 

@@ -1,9 +1,9 @@
 using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Repositories;
 
-namespace WireguardWeb.Tests;
+namespace WireguardWeb.Tests.ConnectionService;
 
-public sealed class FakeConnectionRepository : IRepository<Connection>
+public sealed class MockConnectionRepository : IRepository<Connection>
 {
     private readonly List<Connection> _connections = new();
 

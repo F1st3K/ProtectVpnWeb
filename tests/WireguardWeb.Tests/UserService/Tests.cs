@@ -4,12 +4,12 @@ using WireguardWeb.Core.Dto.User;
 using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Exceptions;
 
-namespace WireguardWeb.Tests;
+namespace WireguardWeb.Tests.UserService;
 
-public sealed class UserServiceTests
+public sealed class Tests
 {
-    private readonly FakeUserRepository _repository;
-    private readonly UserService<FakeUserRepository> _service;
+    private readonly MockUserRepository _repository;
+    private readonly UserService<MockUserRepository> _service;
 
     private readonly User[] _fakeUsers =
     {
@@ -20,10 +20,10 @@ public sealed class UserServiceTests
         new(4, "user5", "pwd5")
     };
 
-    public UserServiceTests()
+    public Tests()
     {
-        _repository = new FakeUserRepository();
-        _service = new UserService<FakeUserRepository>(_repository);
+        _repository = new MockUserRepository();
+        _service = new UserService<MockUserRepository>(_repository);
     }
 
     private bool CheckInRepository(UserDto dto) =>
