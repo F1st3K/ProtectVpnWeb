@@ -1,22 +1,24 @@
 using WireguardWeb.Core.Dto.Connection;
 using WireguardWeb.Core.Entities;
 using WireguardWeb.Core.Entities.Interfaces;
+using WireguardWeb.Core.Exceptions;
 using WireguardWeb.Core.Managers;
 using WireguardWeb.Core.Repositories;
 
 namespace WireguardWeb.Core.DomainServices;
 
-public sealed class ConnectionService<TRepository, TClientConnection> 
+public sealed class ConnectionService<TRepository, TClientConnection, TVpnManager> 
     where TRepository : IRepository<Connection>
     where TClientConnection : ITransfer<Connection>, new()
+    where TVpnManager : IVpnManager<TClientConnection>
 {
-    public TRepository ConnectionRepository { get; }
+    private TRepository ConnectionRepository { get; }
     
-    public IVpnManager<TClientConnection> VpnManager { get; }
+    private TVpnManager VpnManager { get; }
     
     public ConnectionService(
         TRepository connectionRepository,
-        IVpnManager<TClientConnection> vpnManager)
+        TVpnManager vpnManager)
     {
         ConnectionRepository = connectionRepository;
         VpnManager = vpnManager;
@@ -29,11 +31,12 @@ public sealed class ConnectionService<TRepository, TClientConnection>
         
         VpnManager.StartServer();
         
-        var connections = ConnectionRepository.GetRange(0, ConnectionRepository.Count);
-        foreach (var connection in connections)
+        var connections = 
+            ConnectionRepository.GetRange(0, ConnectionRepository.Count);
+        foreach (var c in connections)
         {
             var clientConnection = new TClientConnection();
-            clientConnection.ChangeOf(connection);
+            clientConnection.ChangeOf(c);
             VpnManager.AddConnection(clientConnection);
         }
     }
@@ -41,24 +44,31 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     public ConnectionDto GetConnection(int id)
     {
         if (id < 0)
-            throw new Exception("Invalid data");
+            throw new InvalidArgumentException(
+                new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new Exception("Transferred Id is not find");
+            throw new IdNotFoundException(
+                new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
 
         return connection.ToTransfer();
     }
 
-    public ConnectionDto[] GetUsersInRange(int startIndex, int count)
+    public ConnectionDto[] GetConnectionsInRange(int startIndex, int count)
     {
         if (startIndex < 0 || count <= 0)
-            throw new Exception("Invalid data");
+            throw new InvalidArgumentException(
+                new ExceptionParameter(startIndex, nameof(startIndex)),
+                new ExceptionParameter(count, nameof(count)));
 
         if (startIndex + count > ConnectionRepository.Count)
-            throw new Exception($"Transferred startIndex and count:{startIndex + count}" +
-                                $" was more than there are count users:{ConnectionRepository.Count}");
+            throw new RangeException(
+                new ExceptionParameter(startIndex+count, 
+                    nameof(startIndex) + "+" + nameof(count)),
+                new ExceptionParameter(ConnectionRepository.Count, 
+                    nameof(ConnectionRepository.Count)));
 
         var connections = ConnectionRepository.GetRange(startIndex, count);
         
@@ -70,31 +80,42 @@ public sealed class ConnectionService<TRepository, TClientConnection>
         return connectionsDto;
     }
 
-    public void CreateConnection(CreateConnectionDto dto)
+    public ConnectionDto CreateConnection(CreateConnectionDto dto)
     {
-        if (VpnManager.ServerIsActive == false)
-            throw new Exception("Vpn server is not running");
-
         if (dto.UserId < 0)
-            throw new Exception("Invalid data");
+            throw new InvalidArgumentException(
+            new ExceptionParameter(dto.UserId, nameof(dto.UserId)));
+        
+        if (VpnManager.ServerIsActive == false)
+            throw new NotRunningException(nameof(VpnManager));
 
         string info = VpnManager.GenerateConnectionInfo();
         var newConnection = new Connection(ConnectionRepository.GetNextId(), dto.UserId, info);
         ConnectionRepository.Add(newConnection);
+        
+        var newClientConnection = new TClientConnection();
+        newClientConnection.ChangeOf(newConnection);
+        VpnManager.AddConnection(newClientConnection);
+        
+        return newConnection.ToTransfer();
     }
 
     public void EditConnection(int id, ConnectionDto dto)
     {
         if (id < 0)
-            throw new Exception("Invalid data");
+            throw new InvalidArgumentException(
+                new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new Exception("Transferred Id is not find");
+            throw new IdNotFoundException(
+            new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
 
         if (connection.Id != dto.Id)
-            throw new Exception("Id is not be changed");
+            throw new NonIdenticalException(
+                new ExceptionParameter(connection.Id, nameof(connection.Id)),
+                    new ExceptionParameter(dto.Id, nameof(dto.Id)));
         
         connection.ChangeOf(dto);
         ConnectionRepository.Update(connection); 
@@ -107,10 +128,12 @@ public sealed class ConnectionService<TRepository, TClientConnection>
     public void RemoveConnection(int id)
     {
         if (id < 0)
-            throw new Exception("Invalid data");
+            throw new InvalidArgumentException(
+                new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new Exception("Transferred Id is not find");
+            throw new IdNotFoundException(
+                new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
         

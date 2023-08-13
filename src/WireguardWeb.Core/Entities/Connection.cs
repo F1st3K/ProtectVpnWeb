@@ -6,7 +6,7 @@ namespace WireguardWeb.Core.Entities;
 public sealed class Connection : IEntity, ITransfer<ConnectionDto>
 {
     public int Id { get; }
-    public int UserId { get; }
+    public int UserId { get; private set; }
     public string? Info { get; private set; }
 
     public Connection(
@@ -32,5 +32,6 @@ public sealed class Connection : IEntity, ITransfer<ConnectionDto>
     public void ChangeOf(ConnectionDto dto)
     {
         Info = dto.Info;
+        UserId = dto.UserId;
     }
 }
