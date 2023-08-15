@@ -24,7 +24,6 @@ public class ConnectionController : ControllerBase
     [HttpPost]
     public IActionResult AddConnection([FromQuery] string id)
     {
-
         return Ok(id);
     }
     
