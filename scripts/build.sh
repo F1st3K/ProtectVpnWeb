@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ../src/WireguardWeb.Api
+cd ../src/ProtectVpnWeb.Api
 
 if [[ "$1" == "-i" ]]; then
     echo "run incremental build"

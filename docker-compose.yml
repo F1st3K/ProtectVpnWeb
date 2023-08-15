@@ -1,9 +1,9 @@
 ﻿services:
-  wireguardweb.api:
-    image: wireguardweb.api
+  protectvpnweb.api:
+    image: protectvpnweb.api
     build:
       context: .
-      dockerfile: src/WireguardWeb.Api/Dockerfile
+      dockerfile: src/ProtectVpnWeb.Api/Dockerfile
     ports:
       - 5000:80
       - 5001:443
