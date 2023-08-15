@@ -1,17 +1,17 @@
-using ProtectVpnWeb.Core.DomainServices;
 using ProtectVpnWeb.Core.Dto;
 using ProtectVpnWeb.Core.Dto.Connection;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
+using ProtectVpnWeb.Core.Services.Implementations;
 
 namespace ProtectVpnWeb.Tests.ConnectionService;
 
 public class Tests
 {
     private readonly MockConnectionRepository _repository;
-    private readonly MockVpnManager _vpnManager;
+    private readonly MockVpnService _vpnService;
     private readonly ConnectionService<
-        MockConnectionRepository, MockClientConnection, MockVpnManager> _service;
+        MockConnectionRepository, MockClientConnection, MockVpnService> _service;
 
     private readonly Connection[] _fakeConnections =
     {
@@ -27,17 +27,17 @@ public class Tests
     public Tests()
     {
         _repository = new MockConnectionRepository();
-        _vpnManager = new MockVpnManager();
+        _vpnService = new MockVpnService();
         _service = new ConnectionService<
-            MockConnectionRepository, MockClientConnection, MockVpnManager>
-            (_repository, _vpnManager);
+            MockConnectionRepository, MockClientConnection, MockVpnService>
+            (_repository, _vpnService);
     }
 
     private bool CheckInRepository(ConnectionDto dto) =>
         _repository.GetById(dto.Id).ToTransfer().AreEqual(dto);
     
     private bool CheckInVpnManger(ConnectionDto dto) =>
-        _vpnManager.GetById(dto.Id).ToTransfer().ToTransfer().AreEqual(dto);
+        _vpnService.GetById(dto.Id).ToTransfer().ToTransfer().AreEqual(dto);
     
     [Test]
     public async Task Get_Success()
@@ -127,7 +127,7 @@ public class Tests
         {
             Assert.Catch<IdNotFoundException>(delegate { _service.GetConnection(id); });
             Assert.That(_repository.GetById(id), Is.Null);
-            Assert.That(_vpnManager.GetById(id), Is.Null);
+            Assert.That(_vpnService.GetById(id), Is.Null);
         });
     }
 
@@ -170,7 +170,7 @@ public class Tests
         Assert.Catch<InvalidArgumentException>(delegate 
             { _service.CreateConnection(new CreateConnectionDto { UserId = -1 }); });
 
-        _vpnManager.StopServer();
+        _vpnService.StopServer();
         Assert.Catch<NotRunningException>(delegate
             { _service.CreateConnection(new CreateConnectionDto { UserId = 0 }); });
     }

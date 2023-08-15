@@ -1,8 +1,8 @@
-using ProtectVpnWeb.Core.DomainServices;
 using ProtectVpnWeb.Core.Dto;
 using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
+using ProtectVpnWeb.Core.Services.Implementations;
 
 namespace ProtectVpnWeb.Tests.UserService;
 
