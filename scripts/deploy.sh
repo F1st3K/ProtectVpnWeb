@@ -17,12 +17,12 @@ elif [ -n "$1" ] && [ "$1" != "-i" ]; then
 elif [ -n "$2" ]; then
     dir_override_uml="$2"
 else
-  docker-compose -f docker-compose.yml -p wireguardweb stop wireguardweb.api
-  docker-compose -f docker-compose.yml -p wireguardweb up -d
+  docker-compose -f docker-compose.yml -p protectvpnweb stop protectvpnweb.api
+  docker-compose -f docker-compose.yml -p protectvpnweb up -d
   echo "override uml is not found!"
   exit
 fi
 
 echo $dir_override_uml
-docker-compose -f docker-compose.yml -f $dir_override_uml -p wireguardweb stop wireguardweb.api
-docker-compose -f docker-compose.yml -f $dir_override_uml -p wireguardweb up -d
+docker-compose -f docker-compose.yml -f $dir_override_uml -p protectvpnweb stop protectvpnweb.api
+docker-compose -f docker-compose.yml -f $dir_override_uml -p protectvpnweb up -d
