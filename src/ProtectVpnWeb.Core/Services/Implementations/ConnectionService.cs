@@ -2,15 +2,15 @@ using ProtectVpnWeb.Core.Dto.Connection;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Entities.Interfaces;
 using ProtectVpnWeb.Core.Exceptions;
-using ProtectVpnWeb.Core.Managers;
 using ProtectVpnWeb.Core.Repositories;
 
-namespace ProtectVpnWeb.Core.DomainServices;
+namespace ProtectVpnWeb.Core.Services.Implementations;
 
-public sealed class ConnectionService<TRepository, TClientConnection, TVpnManager> 
+public sealed class ConnectionService<TRepository, TClientConnection, TVpnManager>
+    : IConnectionService
     where TRepository : IRepository<Connection>
     where TClientConnection : ITransfer<Connection>, new()
-    where TVpnManager : IVpnManager<TClientConnection>
+    where TVpnManager : IVpnService<TClientConnection>
 {
     private TRepository ConnectionRepository { get; }
     

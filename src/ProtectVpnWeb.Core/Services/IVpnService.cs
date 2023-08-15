@@ -1,6 +1,6 @@
-namespace ProtectVpnWeb.Core.Managers;
+namespace ProtectVpnWeb.Core.Services;
 
-public interface IVpnManager<in TConnection> 
+public interface IVpnService<in TConnection> 
 {
     public bool ServerIsActive { get; }
     public void StartServer();

@@ -1,8 +1,8 @@
-using ProtectVpnWeb.Core.Managers;
+using ProtectVpnWeb.Core.Services;
 
 namespace ProtectVpnWeb.Tests.ConnectionService;
 
-public class MockVpnManager : IVpnManager<MockClientConnection>
+public class MockVpnService : IVpnService<MockClientConnection>
 {
     public bool ServerIsActive { get; private set; }
     

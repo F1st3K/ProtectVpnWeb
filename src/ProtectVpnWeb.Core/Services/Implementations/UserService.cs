@@ -3,9 +3,10 @@ using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
 using ProtectVpnWeb.Core.Repositories;
 
-namespace ProtectVpnWeb.Core.DomainServices;
+namespace ProtectVpnWeb.Core.Services.Implementations;
 
-public sealed class UserService<TRepository> 
+public sealed class UserService<TRepository>
+    : IUserService
     where TRepository : IRepository<User>, IUniqueNameRepository<User>
 {
     private TRepository UserRepository { get; }

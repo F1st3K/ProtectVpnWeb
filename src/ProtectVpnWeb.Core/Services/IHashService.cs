@@ -1,8 +1,8 @@
 using ProtectVpnWeb.Core.Entities.Interfaces;
 
-namespace ProtectVpnWeb.Core.Managers;
+namespace ProtectVpnWeb.Core.Services;
 
-public interface IHasher<THasPassword>
+public interface IHashService<THasPassword>
     where THasPassword : IHasPassword
 {
     public string GetHash(string password);
