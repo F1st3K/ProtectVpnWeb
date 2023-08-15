@@ -7,7 +7,7 @@ else
 fi
 
 cd ..
-defdir_override_uml=".idea/.idea.WireguardWeb/Docker/docker-compose.generated.override.yml"
+defdir_override_uml=".idea/.idea.ProtectVpnWeb/Docker/docker-compose.generated.override.yml"
 
 if [ -e "$defdir_override_uml" ]; then
     dir_override_uml="$defdir_override_uml"
