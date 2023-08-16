@@ -22,7 +22,7 @@ public sealed class UserService<TRepository> : IUserService
                 new ExceptionParameter(userName, nameof(userName)));
 
         if (UserRepository.CheckNameUniqueness(userName))
-            throw new UniqNameNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(userName, nameof(userName)));
 
         var user = UserRepository.GetByUniqueName(userName);
@@ -37,7 +37,7 @@ public sealed class UserService<TRepository> : IUserService
                 new ExceptionParameter(id, nameof(id)));
 
         if (UserRepository.CheckIdUniqueness(id))
-            throw new IdNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(id, nameof(id)));
 
         var user = UserRepository.GetById(id);
@@ -74,7 +74,7 @@ public sealed class UserService<TRepository> : IUserService
                 new ExceptionParameter(userName, nameof(userName)));
 
         if (UserRepository.CheckNameUniqueness(userName))
-            throw new UniqNameNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(userName, nameof(userName)));
 
         var user = UserRepository.GetByUniqueName(userName);
@@ -95,7 +95,7 @@ public sealed class UserService<TRepository> : IUserService
                 new ExceptionParameter(id, nameof(id)));
 
         if (UserRepository.CheckIdUniqueness(id))
-            throw new IdNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(id, nameof(id)));
 
         var user = UserRepository.GetById(id);

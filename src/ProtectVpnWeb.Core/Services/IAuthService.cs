@@ -11,7 +11,7 @@ public interface IAuthService
     
     public string ChangePassword(ChangePwdDto dto);
 
-    public (string accessToken, string refreshToken) GetAccessRefreshTokens(string refreshToken);
+    public void GetTokensByRefreshToken(string token, out string refreshToken, out string accessToken);
 
     public void RemoveRefreshToken(string token);
 

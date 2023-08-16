@@ -125,7 +125,7 @@ public class Tests
         
         Assert.Multiple(() =>
         {
-            Assert.Catch<IdNotFoundException>(delegate { _service.GetConnection(id); });
+            Assert.Catch<NotFoundException>(delegate { _service.GetConnection(id); });
             Assert.That(_repository.GetById(id), Is.Null);
             Assert.That(_vpnService.GetById(id), Is.Null);
         });
@@ -141,7 +141,7 @@ public class Tests
         
         var id = _repository.Count;
         while (_repository.CheckIdUniqueness(id) == false) id++;
-        Assert.Catch<IdNotFoundException>(delegate { _service.GetConnection(id); });
+        Assert.Catch<NotFoundException>(delegate { _service.GetConnection(id); });
     }
 
     [Test]
@@ -192,7 +192,7 @@ public class Tests
         
         var id = _repository.Count;
         while (_repository.CheckIdUniqueness(id) == false) id++;
-        Assert.Catch<IdNotFoundException>(delegate
+        Assert.Catch<NotFoundException>(delegate
             { _service.EditConnection(id, dto); });
 
         Assert.Catch<NonIdenticalException>(delegate 
@@ -210,7 +210,7 @@ public class Tests
         
         var id = _repository.Count;
         while (_repository.CheckIdUniqueness(id) == false) id++;
-        Assert.Catch<IdNotFoundException>(delegate 
+        Assert.Catch<NotFoundException>(delegate 
             { _service.RemoveConnection(id); });
     }
 }

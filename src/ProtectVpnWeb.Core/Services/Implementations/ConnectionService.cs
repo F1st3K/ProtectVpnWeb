@@ -47,7 +47,7 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
                 new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new IdNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
@@ -106,7 +106,7 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
                 new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new IdNotFoundException(
+            throw new NotFoundException(
             new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
@@ -131,7 +131,7 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
                 new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new IdNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
