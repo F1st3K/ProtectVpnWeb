@@ -100,7 +100,7 @@ public sealed class Tests
 
         var uname = new Guid().ToString();
         while (_repository.CheckNameUniqueness(uname) == false) uname = new Guid().ToString();
-        Assert.Catch<UserNameNotFoundException>(delegate { _service.GetUser(uname); });
+        Assert.Catch<UniqNameNotFoundException>(delegate { _service.GetUser(uname); });
     }
 
     [Test]
@@ -146,7 +146,7 @@ public sealed class Tests
 
         var uname = new Guid().ToString();
         while (_repository.CheckNameUniqueness(uname) == false) uname = new Guid().ToString();
-        Assert.Catch<UserNameNotFoundException>(delegate { _service.EditUser(uname, dto); });
+        Assert.Catch<UniqNameNotFoundException>(delegate { _service.EditUser(uname, dto); });
 
         Assert.Catch<NonIdenticalException>(delegate { _service.EditUser(1, dto); });
         Assert.Catch<NonIdenticalException>(delegate { _service.EditUser("user2", dto); });

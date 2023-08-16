@@ -23,7 +23,7 @@ public sealed class UserService<TRepository>
                 new ExceptionParameter(userName, nameof(userName)));
 
         if (UserRepository.CheckNameUniqueness(userName))
-            throw new UserNameNotFoundException(
+            throw new UniqNameNotFoundException(
                 new ExceptionParameter(userName, nameof(userName)));
 
         var user = UserRepository.GetByUniqueName(userName);
@@ -75,7 +75,7 @@ public sealed class UserService<TRepository>
                 new ExceptionParameter(userName, nameof(userName)));
 
         if (UserRepository.CheckNameUniqueness(userName))
-            throw new UserNameNotFoundException(
+            throw new UniqNameNotFoundException(
                 new ExceptionParameter(userName, nameof(userName)));
 
         var user = UserRepository.GetByUniqueName(userName);
