@@ -1,9 +1,11 @@
 using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
+using ProtectVpnWeb.Core.Repositories;
 
 namespace ProtectVpnWeb.Core.Services.Implementations;
 
-public sealed class AuthService : IAuthService
+public sealed class AuthService<TRepository> : IAuthService
+    where TRepository : IRepository<RefreshToken>
 {
     public string RegisterUser(AuthUserDto dto)
     {
