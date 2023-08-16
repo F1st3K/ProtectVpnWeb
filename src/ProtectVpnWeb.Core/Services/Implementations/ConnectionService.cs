@@ -6,8 +6,7 @@ using ProtectVpnWeb.Core.Repositories;
 
 namespace ProtectVpnWeb.Core.Services.Implementations;
 
-public sealed class ConnectionService<TRepository, TClientConnection, TVpnManager>
-    : IConnectionService
+public sealed class ConnectionService<TRepository, TClientConnection, TVpnManager> : IConnectionService
     where TRepository : IRepository<Connection>
     where TClientConnection : ITransfer<Connection>, new()
     where TVpnManager : IVpnService<TClientConnection>

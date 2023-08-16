@@ -5,8 +5,7 @@ using ProtectVpnWeb.Core.Repositories;
 
 namespace ProtectVpnWeb.Core.Services.Implementations;
 
-public sealed class UserService<TRepository>
-    : IUserService
+public sealed class UserService<TRepository> : IUserService
     where TRepository : IRepository<User>, IUniqueNameRepository<User>
 {
     private TRepository UserRepository { get; }

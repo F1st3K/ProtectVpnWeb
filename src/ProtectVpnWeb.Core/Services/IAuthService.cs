@@ -1,4 +1,5 @@
 using ProtectVpnWeb.Core.Dto.User;
+using ProtectVpnWeb.Core.Entities;
 
 namespace ProtectVpnWeb.Core.Services;
 
@@ -10,9 +11,9 @@ public interface IAuthService
     
     public string ChangePassword(ChangePwdDto dto);
 
-    public Tuple<string, string> GetAccessRefreshTokens(string refreshToken);
+    public (string accessToken, string refreshToken) GetAccessRefreshTokens(string refreshToken);
 
     public void RemoveRefreshToken(string token);
 
-    public bool ValidateAccessToken(string token);
+    public bool ValidateAccessToken(string token, out UserRoles? role);
 }

@@ -13,11 +13,11 @@ public sealed class Tests
 
     private readonly User[] _fakeUsers =
     {
-        new(0, "user1", "pwd1"),
-        new(1, "user2", "pwd2"),
-        new(2, "user3", "pwd3"),
-        new(3, "user4", "pwd4"),
-        new(4, "user5", "pwd5")
+        new(0, "user1", "pwd1", null),
+        new(1, "user2", "pwd2", null),
+        new(2, "user3", "pwd3", null),
+        new(3, "user4", "pwd4", null),
+        new(4, "user5", "pwd5", null)
     };
 
     public Tests()
