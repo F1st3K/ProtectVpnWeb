@@ -9,7 +9,7 @@ public static class DtoEqual
         dto.UniqueName == obj.UniqueName &&
         dto.Id == obj.Id;
     
-    public static bool AreEqual(this UserDto dto, CreateUserDto obj) =>
+    public static bool AreEqual(this UserDto dto, AuthUserDto obj) =>
         dto.UniqueName == obj.UserName;
     
     public static bool AreEqual(this ConnectionDto dto, ConnectionDto obj) =>

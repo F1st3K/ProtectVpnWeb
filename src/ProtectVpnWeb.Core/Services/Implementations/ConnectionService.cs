@@ -6,8 +6,7 @@ using ProtectVpnWeb.Core.Repositories;
 
 namespace ProtectVpnWeb.Core.Services.Implementations;
 
-public sealed class ConnectionService<TRepository, TClientConnection, TVpnManager>
-    : IConnectionService
+public sealed class ConnectionService<TRepository, TClientConnection, TVpnManager> : IConnectionService
     where TRepository : IRepository<Connection>
     where TClientConnection : ITransfer<Connection>, new()
     where TVpnManager : IVpnService<TClientConnection>
@@ -48,7 +47,7 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
                 new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new IdNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
@@ -107,7 +106,7 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
                 new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new IdNotFoundException(
+            throw new NotFoundException(
             new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);
@@ -132,7 +131,7 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
                 new ExceptionParameter(id, nameof(id)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
-            throw new IdNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(id, nameof(id)));
 
         var connection = ConnectionRepository.GetById(id);

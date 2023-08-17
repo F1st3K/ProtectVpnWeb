@@ -5,8 +5,7 @@ using ProtectVpnWeb.Core.Repositories;
 
 namespace ProtectVpnWeb.Core.Services.Implementations;
 
-public sealed class UserService<TRepository>
-    : IUserService
+public sealed class UserService<TRepository> : IUserService
     where TRepository : IRepository<User>, IUniqueNameRepository<User>
 {
     private TRepository UserRepository { get; }
@@ -23,7 +22,7 @@ public sealed class UserService<TRepository>
                 new ExceptionParameter(userName, nameof(userName)));
 
         if (UserRepository.CheckNameUniqueness(userName))
-            throw new UserNameNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(userName, nameof(userName)));
 
         var user = UserRepository.GetByUniqueName(userName);
@@ -38,7 +37,7 @@ public sealed class UserService<TRepository>
                 new ExceptionParameter(id, nameof(id)));
 
         if (UserRepository.CheckIdUniqueness(id))
-            throw new IdNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(id, nameof(id)));
 
         var user = UserRepository.GetById(id);
@@ -75,7 +74,7 @@ public sealed class UserService<TRepository>
                 new ExceptionParameter(userName, nameof(userName)));
 
         if (UserRepository.CheckNameUniqueness(userName))
-            throw new UserNameNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(userName, nameof(userName)));
 
         var user = UserRepository.GetByUniqueName(userName);
@@ -96,7 +95,7 @@ public sealed class UserService<TRepository>
                 new ExceptionParameter(id, nameof(id)));
 
         if (UserRepository.CheckIdUniqueness(id))
-            throw new IdNotFoundException(
+            throw new NotFoundException(
                 new ExceptionParameter(id, nameof(id)));
 
         var user = UserRepository.GetById(id);

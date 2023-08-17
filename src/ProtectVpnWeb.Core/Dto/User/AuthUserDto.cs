@@ -1,6 +1,6 @@
 namespace ProtectVpnWeb.Core.Dto.User;
 
-public sealed class CreateUserDto
+public sealed class AuthUserDto
 {
     public string UserName { get; set; }
     

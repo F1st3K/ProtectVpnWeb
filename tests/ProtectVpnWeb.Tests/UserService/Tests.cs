@@ -13,11 +13,11 @@ public sealed class Tests
 
     private readonly User[] _fakeUsers =
     {
-        new(0, "user1", "pwd1"),
-        new(1, "user2", "pwd2"),
-        new(2, "user3", "pwd3"),
-        new(3, "user4", "pwd4"),
-        new(4, "user5", "pwd5")
+        new(0, "user1", "pwd1", null),
+        new(1, "user2", "pwd2", null),
+        new(2, "user3", "pwd3", null),
+        new(3, "user4", "pwd4", null),
+        new(4, "user5", "pwd5", null)
     };
 
     public Tests()
@@ -96,11 +96,11 @@ public sealed class Tests
 
         var id = _repository.Count;
         while (_repository.CheckIdUniqueness(id) == false) id++;
-        Assert.Catch<IdNotFoundException>(delegate { _service.GetUser(id); });
+        Assert.Catch<NotFoundException>(delegate { _service.GetUser(id); });
 
         var uname = new Guid().ToString();
         while (_repository.CheckNameUniqueness(uname) == false) uname = new Guid().ToString();
-        Assert.Catch<UserNameNotFoundException>(delegate { _service.GetUser(uname); });
+        Assert.Catch<NotFoundException>(delegate { _service.GetUser(uname); });
     }
 
     [Test]
@@ -142,11 +142,11 @@ public sealed class Tests
 
         var id = _repository.Count;
         while (_repository.CheckIdUniqueness(id) == false) id++;
-        Assert.Catch<IdNotFoundException>(delegate { _service.EditUser(id, dto); });
+        Assert.Catch<NotFoundException>(delegate { _service.EditUser(id, dto); });
 
         var uname = new Guid().ToString();
         while (_repository.CheckNameUniqueness(uname) == false) uname = new Guid().ToString();
-        Assert.Catch<UserNameNotFoundException>(delegate { _service.EditUser(uname, dto); });
+        Assert.Catch<NotFoundException>(delegate { _service.EditUser(uname, dto); });
 
         Assert.Catch<NonIdenticalException>(delegate { _service.EditUser(1, dto); });
         Assert.Catch<NonIdenticalException>(delegate { _service.EditUser("user2", dto); });
