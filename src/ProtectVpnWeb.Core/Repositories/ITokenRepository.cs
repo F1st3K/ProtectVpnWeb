@@ -9,5 +9,7 @@ public interface ITokenRepository<TToken>
 
     public bool TokenExists(TToken token);
 
+    public void AddToken(TToken token);
+
     public void RemoveToken(TToken token);
 }

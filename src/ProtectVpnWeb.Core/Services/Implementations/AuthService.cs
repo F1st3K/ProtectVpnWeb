@@ -5,24 +5,30 @@ using ProtectVpnWeb.Core.Repositories;
 
 namespace ProtectVpnWeb.Core.Services.Implementations;
 
-public sealed class AuthService<TUserRepository, TRefreshTokenRepository, THasher> : IAuthService
+public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TTokenService, THasher>
+    : IAuthService
     where TUserRepository : IRepository<User>, IUniqueNameRepository<User>
     where TRefreshTokenRepository : ITokenRepository<string>
+    where TTokenService : ITokenService<string>
     where THasher : IHashService
 {
     private TUserRepository UserRepository { get; }
     
     private TRefreshTokenRepository RefreshTokenRepository { get; }
     
+    private TTokenService TokenService { get; }
+    
     private THasher Hasher { get; }
     
     public AuthService(
         TUserRepository userRepository,
         TRefreshTokenRepository refreshTokenRepository,
+        TTokenService tokenService,
         THasher hasher)
     {
         UserRepository = userRepository;
         RefreshTokenRepository = refreshTokenRepository;
+        TokenService = tokenService;
         Hasher = hasher;
     }
     
@@ -56,12 +62,17 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, THashe
             throw new InvalidArgumentException(
                 new ExceptionParameter(dto.Password, nameof(dto.Password)),
                 new ExceptionParameter(dto.UserName, nameof(dto.UserName)));
-        
+
         if (UserRepository.CheckNameUniqueness(dto.UserName))
-            throw new DuplicateUniqKeyException(
-                new ExceptionParameter(dto.UserName, nameof(dto.UserName)));
+            throw new InvalidAuthenticationException();
         
-        return null;
+        var user = UserRepository.GetByUniqueName(dto.UserName);
+        if (user.HashPassword != Hasher.GetHash(dto.Password))
+            throw new InvalidAuthenticationException();
+
+        var refresh = TokenService.GenerateToken();
+        RefreshTokenRepository.AddToken(refresh);
+        return refresh;
     }
 
     public string ChangePassword(ChangePwdDto dto)
@@ -98,8 +109,10 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, THashe
             throw new NotFoundException(
                 new ExceptionParameter(token, nameof(refreshToken)));
 
-        refreshToken = null;
-        accessToken = null;
+        RefreshTokenRepository.RemoveToken(token);
+        refreshToken = TokenService.GenerateToken();
+        accessToken = TokenService.GenerateToken();
+        RefreshTokenRepository.AddToken(refreshToken);
     }
 
     public void RemoveRefreshToken(string token)
