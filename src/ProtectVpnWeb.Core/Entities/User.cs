@@ -11,7 +11,7 @@ public sealed class User : IEntity, ITransfer<UserDto>, IHasUniqueName
     
     public string HashPassword { get; private set; }
     
-    public UserRoles Role { get; }
+    public UserRoles Role { get; private set; }
     
     public User(
         int id,
@@ -38,5 +38,7 @@ public sealed class User : IEntity, ITransfer<UserDto>, IHasUniqueName
     public void ChangeOf(UserDto dto)
     {
         UniqueName = dto.UniqueName;
+        if (Enum.TryParse(dto.Role, out UserRoles role))
+            Role = role;
     }
 }

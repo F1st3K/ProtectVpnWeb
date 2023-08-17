@@ -1,3 +1,4 @@
+using ProtectVpnWeb.Core.Dto.Auth;
 using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
@@ -18,17 +19,21 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
     
     private TTokenService TokenService { get; }
     
+    private TimeLiveTokensDto TimeLiveTokens { get; }
+    
     private THasher Hasher { get; }
     
     public AuthService(
         TUserRepository userRepository,
         TRefreshTokenRepository refreshTokenRepository,
         TTokenService tokenService,
+        TimeLiveTokensDto timeLiveTokens,
         THasher hasher)
     {
         UserRepository = userRepository;
         RefreshTokenRepository = refreshTokenRepository;
         TokenService = tokenService;
+        TimeLiveTokens = timeLiveTokens;
         Hasher = hasher;
     }
     
@@ -69,8 +74,9 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         var user = UserRepository.GetByUniqueName(dto.UserName);
         if (user.HashPassword != Hasher.GetHash(dto.Password))
             throw new InvalidAuthenticationException();
-
-        var refresh = TokenService.GenerateToken();
+        
+        var refresh = TokenService.GenerateToken(
+            user.ToTransfer(), TimeLiveTokens.RefreshAuthToken);
         RefreshTokenRepository.AddToken(refresh);
         return refresh;
     }
@@ -99,7 +105,8 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         return AuthUser(new AuthUserDto { UserName = dto.UserName, Password = dto.NewPassword });
     }
 
-    public void GetTokensByRefreshToken(string token, out string refreshToken, out string accessToken)
+    public void GetTokensByRefreshToken(
+        string token, out string refreshToken, out string accessToken)
     {
         if (token == string.Empty)
             throw new InvalidArgumentException(
@@ -108,10 +115,17 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         if (RefreshTokenRepository.TokenExists(token) == false)
             throw new NotFoundException(
                 new ExceptionParameter(token, nameof(refreshToken)));
-
         RefreshTokenRepository.RemoveToken(token);
-        refreshToken = TokenService.GenerateToken();
-        accessToken = TokenService.GenerateToken();
+
+        if (TokenService.ValidateToken(token) == false)
+            throw new InvalidTokenException(
+                new ExceptionParameter(token, nameof(token)));
+        
+        var userIdDto = TokenService.ReadTokenPayload<UserIdDto>(token);
+        var userDto = UserRepository.GetById(userIdDto.Id).ToTransfer();
+        
+        refreshToken = TokenService.GenerateToken(userIdDto, TimeLiveTokens.RefreshToken);
+        accessToken = TokenService.GenerateToken(userDto, TimeLiveTokens.AccessToken);
         RefreshTokenRepository.AddToken(refreshToken);
     }
 
@@ -131,6 +145,15 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
     public bool ValidateAccessToken(string token, out UserRoles? role)
     {
         role = null;
-        return false;
+        if (TokenService.ValidateToken(token) == false)
+            return false;
+
+        var dto = TokenService.ReadTokenPayload<UserDto>(token);
+        if (Enum.TryParse(dto.Role, out UserRoles r))
+            role = r;
+        else throw new InvalidArgumentException(
+                new ExceptionParameter(dto.Role, nameof(dto.Role)));
+        
+        return true;
     }
 }

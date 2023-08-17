@@ -3,5 +3,7 @@ namespace ProtectVpnWeb.Core.Services;
 public interface ITokenService<TToken>
     where TToken : notnull
 {
-    public TToken GenerateToken();
+    TToken GenerateToken<TPayload>(TPayload payload, TimeSpan expirationTime);
+    bool ValidateToken(TToken token);
+    TPayload ReadTokenPayload<TPayload>(TToken token);
 }
