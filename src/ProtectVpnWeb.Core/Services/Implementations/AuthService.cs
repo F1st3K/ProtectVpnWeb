@@ -76,7 +76,7 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
             throw new InvalidAuthenticationException();
         
         var refresh = TokenService.GenerateToken(
-            user.ToTransfer(), TimeLiveTokens.RefreshAuthToken);
+            new UserIdDto{ Id = user.Id}, TimeLiveTokens.RefreshAuthToken);
         RefreshTokenRepository.AddToken(refresh);
         return refresh;
     }
@@ -123,9 +123,11 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         
         var userIdDto = TokenService.ReadTokenPayload<UserIdDto>(token);
         var userDto = UserRepository.GetById(userIdDto.Id).ToTransfer();
+        var userIdUnameRoleDto = new UserIdUnameRoleDto 
+            { Id = userDto.Id, UniqueName = userDto.UniqueName, Role = userDto.Role};
         
         refreshToken = TokenService.GenerateToken(userIdDto, TimeLiveTokens.RefreshToken);
-        accessToken = TokenService.GenerateToken(userDto, TimeLiveTokens.AccessToken);
+        accessToken = TokenService.GenerateToken(userIdUnameRoleDto, TimeLiveTokens.AccessToken);
         RefreshTokenRepository.AddToken(refreshToken);
     }
 
@@ -148,7 +150,7 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         if (TokenService.ValidateToken(token) == false)
             return false;
 
-        var dto = TokenService.ReadTokenPayload<UserDto>(token);
+        var dto = TokenService.ReadTokenPayload<UserIdUnameRoleDto>(token);
         if (Enum.TryParse(dto.Role, out UserRoles r))
             role = r;
         else throw new InvalidArgumentException(
