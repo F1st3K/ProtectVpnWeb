@@ -1,7 +1,7 @@
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Repositories;
 
-namespace ProtectVpnWeb.Tests.UserService;
+namespace ProtectVpnWeb.CoreTests.UserService;
 
 public sealed class MockUserRepository : IRepository<User>, IUniqueNameRepository<User>
 {

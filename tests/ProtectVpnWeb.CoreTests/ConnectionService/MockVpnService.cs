@@ -1,6 +1,6 @@
 using ProtectVpnWeb.Core.Services;
 
-namespace ProtectVpnWeb.Tests.ConnectionService;
+namespace ProtectVpnWeb.CoreTests.ConnectionService;
 
 public class MockVpnService : IVpnService<MockClientConnection>
 {

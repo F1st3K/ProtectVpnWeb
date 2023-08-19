@@ -4,7 +4,7 @@ using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
 using ProtectVpnWeb.Core.Services.Implementations;
 
-namespace ProtectVpnWeb.Tests.ConnectionService;
+namespace ProtectVpnWeb.CoreTests.ConnectionService;
 
 public class Tests
 {

@@ -1,7 +1,7 @@
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Repositories;
 
-namespace ProtectVpnWeb.Tests.ConnectionService;
+namespace ProtectVpnWeb.CoreTests.ConnectionService;
 
 public sealed class MockConnectionRepository : IRepository<Connection>
 {
