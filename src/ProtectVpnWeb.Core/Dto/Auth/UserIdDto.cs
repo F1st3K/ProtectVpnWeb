@@ -1,4 +1,4 @@
-namespace ProtectVpnWeb.Core.Dto.User;
+namespace ProtectVpnWeb.Core.Dto.Auth;
 
 public class UserIdDto
 {
