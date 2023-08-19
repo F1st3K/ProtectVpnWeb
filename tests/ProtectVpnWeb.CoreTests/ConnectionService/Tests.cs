@@ -132,7 +132,7 @@ public class Tests
     }
 
     [Test]
-    public void Get_Exception()
+    public async Task Get_Exception()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -145,7 +145,7 @@ public class Tests
     }
 
     [Test]
-    public void GetRange_Exception()
+    public async Task GetRange_Exception()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -162,7 +162,7 @@ public class Tests
     }
 
     [Test]
-    public void Create_Exception()
+    public async Task Create_Exception()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -176,7 +176,7 @@ public class Tests
     }
 
     [Test]
-    public void Edit_Exception()
+    public async Task Edit_Exception()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -200,7 +200,7 @@ public class Tests
     }
 
     [Test]
-    public void Remove_Exception()
+    public async Task Remove_Exception()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();

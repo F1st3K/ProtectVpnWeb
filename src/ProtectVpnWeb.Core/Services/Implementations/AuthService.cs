@@ -23,12 +23,11 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
     
     private THasher Hasher { get; }
     
-    public AuthService(
-        TUserRepository userRepository,
+    public AuthService(TUserRepository userRepository,
         TRefreshTokenRepository refreshTokenRepository,
         TTokenService tokenService,
-        TimeLiveTokensDto timeLiveTokens,
-        THasher hasher)
+        THasher hasher,
+        TimeLiveTokensDto timeLiveTokens)
     {
         UserRepository = userRepository;
         RefreshTokenRepository = refreshTokenRepository;
