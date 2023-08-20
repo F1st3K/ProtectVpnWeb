@@ -121,12 +121,47 @@ public sealed class Tests
         {
             Assert.That(_tokenRepository.TokenExists(token), Is.False);
             Assert.That(_tokenService.ValidateToken(refreshToken), Is.True);
-            Assert.That(_tokenService.ReadTokenPayload<UserIdDto>(refreshToken).Id,
-                Is.EqualTo(user.Id));
+            Assert.That(_tokenService.ReadTokenPayload<UserIdDto>(refreshToken)
+                .AreEqual(user), Is.True);
             Assert.That(_tokenService.ValidateToken(accessToken), Is.True);
             Assert.That(
                 _tokenService.ReadTokenPayload<UserIdUnameRoleDto>(accessToken)
                 .AreEqual(user), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task RemoveRefreshToken_Success()
+    {
+        _userRepository.FakeInit(_fakeUsers);
+        _tokenRepository.FakeInit(_fakeTokens);
+        _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
+        var token = "token4";
+        
+       _service.RemoveRefreshToken(token);
+        
+        Assert.That(_tokenRepository.TokenExists(token), Is.False);
+    }
+
+    [Test]
+    public async Task ValidateAccessToken_Success()
+    {
+        _userRepository.FakeInit(_fakeUsers);
+        _tokenRepository.FakeInit(_fakeTokens);
+        _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
+        const string token = "token5";
+        const string fakeToken = "fakeToken";
+        _service.GetTokensByRefreshToken(token,out _, out var accessToken);
+
+        var positiveValidate = _service.ValidateAccessToken(accessToken, out var role);
+        var negativeValidate = _service.ValidateAccessToken(fakeToken, out var nullRole);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(positiveValidate, Is.True);
+            Assert.That(role, Is.Not.Null);
+            Assert.That(negativeValidate, Is.False);
+            Assert.That(nullRole, Is.Null);
         });
     }
 }
