@@ -138,4 +138,30 @@ public sealed class UserService<TRepository> : IUserService
         user.ChangeOf(dto);
         UserRepository.Update(user);
     }
+
+    public void RemoveUser(int id)
+    {
+        if (id < 0)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(id, nameof(id)));
+
+        if (UserRepository.CheckIdUniqueness(id))
+            throw new NotFoundException(
+                new ExceptionParameter(id, nameof(id)));
+        
+        UserRepository.Remove(id);
+    }
+
+    public void RemoveUser(string uname)
+    {
+        if (uname == string.Empty)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(uname, nameof(uname)));
+
+        if (UserRepository.CheckNameUniqueness(uname))
+            throw new NotFoundException(
+                new ExceptionParameter(uname, nameof(uname)));
+        
+        UserRepository.Remove(uname);
+    }
 }
