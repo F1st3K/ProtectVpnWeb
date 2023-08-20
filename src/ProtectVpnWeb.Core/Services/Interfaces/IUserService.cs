@@ -1,6 +1,6 @@
 using ProtectVpnWeb.Core.Dto.User;
 
-namespace ProtectVpnWeb.Core.Services;
+namespace ProtectVpnWeb.Core.Services.Interfaces;
 
 public interface IUserService
 {
