@@ -3,6 +3,7 @@ using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
 using ProtectVpnWeb.Core.Services;
+using ProtectVpnWeb.CoreTests.AuthService;
 
 namespace ProtectVpnWeb.CoreTests.UserService;
 
@@ -87,6 +88,24 @@ public sealed class Tests
     }
 
     [Test]
+    public void Create_Success()
+    {
+        _repository.FakeInit(_fakeUsers);
+        var newUser = new CreateUserDto
+            { UniqueName = "user6", Role = UserRoles.Admin.ToString(), Password = "pwd6" };
+        var hasher = new MockHashService("//hash");
+
+        _service.CreateUser(newUser, hasher);
+
+        var user = _repository.GetByUniqueName(newUser.UniqueName);
+        Assert.Multiple(() =>
+        {
+            Assert.That(user.HashPassword, Is.EqualTo(hasher.GetHash(newUser.Password)));
+            Assert.That(user.Role, Is.EqualTo(UserRoles.Admin));
+        });
+    }
+
+    [Test]
     public void Get_Exception()
     {
         _repository.FakeInit(_fakeUsers);
@@ -150,5 +169,29 @@ public sealed class Tests
 
         Assert.Catch<NonIdenticalException>(delegate { _service.EditUser(1, dto); });
         Assert.Catch<NonIdenticalException>(delegate { _service.EditUser("user2", dto); });
+    }
+
+    [Test]
+    public void Create_Exception()
+    {
+        _repository.FakeInit(_fakeUsers);
+
+        Assert.Catch<InvalidArgumentException>(delegate
+        { _service.CreateUser(
+            new CreateUserDto
+                { UniqueName = string.Empty, Role = UserRoles.User.ToString(), Password = "pwd" },
+            new MockHashService(string.Empty)); });
+
+        Assert.Catch<InvalidArgumentException>(delegate
+        { _service.CreateUser(
+            new CreateUserDto
+                { UniqueName = "user7", Role = UserRoles.User.ToString(), Password = string.Empty },
+            new MockHashService(string.Empty)); });
+
+        Assert.Catch<InvalidArgumentException>(delegate
+        { _service.CreateUser(
+            new CreateUserDto
+                { UniqueName = "user7", Role = "user", Password = "pwd" },
+            new MockHashService(string.Empty)); });
     }
 }
