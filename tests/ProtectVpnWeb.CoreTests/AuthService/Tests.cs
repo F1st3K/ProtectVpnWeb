@@ -2,6 +2,7 @@ using ProtectVpnWeb.Core.Dto;
 using ProtectVpnWeb.Core.Dto.Auth;
 using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
+using ProtectVpnWeb.Core.Exceptions;
 using ProtectVpnWeb.Core.Services.Implementations;
 using ProtectVpnWeb.CoreTests.UserService;
 
@@ -136,7 +137,7 @@ public sealed class Tests
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
-        var token = "token4";
+        const string token = "token4";
         
        _service.RemoveRefreshToken(token);
         
@@ -150,18 +151,126 @@ public sealed class Tests
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
         const string token = "token5";
-        const string fakeToken = "fakeToken";
+        const string fakeAccess = "fakeToken";
         _service.GetTokensByRefreshToken(token,out _, out var accessToken);
 
-        var positiveValidate = _service.ValidateAccessToken(accessToken, out var role);
-        var negativeValidate = _service.ValidateAccessToken(fakeToken, out var nullRole);
+        var posValidate = _service.ValidateAccessToken(accessToken, out var role);
+        var negValidate = _service.ValidateAccessToken(fakeAccess, out var nullRole);
         
         Assert.Multiple(() =>
         {
-            Assert.That(positiveValidate, Is.True);
+            Assert.That(posValidate, Is.True);
             Assert.That(role, Is.Not.Null);
-            Assert.That(negativeValidate, Is.False);
+            Assert.That(negValidate, Is.False);
             Assert.That(nullRole, Is.Null);
         });
+    }
+
+    [Test]
+    public async Task AuthUser_Exception()
+    {
+        _userRepository.FakeInit(_fakeUsers);
+        _tokenRepository.FakeInit(_fakeTokens);
+        _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
+
+        Assert.Catch<InvalidArgumentException>(delegate
+        { _service.AuthUser(new AuthUserDto 
+                { UserName = string.Empty, Password = string.Empty }); });
+        
+        Assert.Catch<InvalidAuthenticationException>(delegate
+        { _service.AuthUser(new AuthUserDto
+            { UserName = "invalidUser", Password = "pwd1"}); });
+        
+        Assert.Catch<InvalidAuthenticationException>(delegate
+        { _service.AuthUser(new AuthUserDto
+            { UserName = "user1", Password = "invalidPwd"}); });
+    }
+
+    [Test]
+    public async Task RegisterUser_Exception()
+    {
+        _userRepository.FakeInit(_fakeUsers);
+        _tokenRepository.FakeInit(_fakeTokens);
+        _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
+        
+        Assert.Catch<InvalidArgumentException>(delegate
+        { _service.RegisterUser(new AuthUserDto 
+            { UserName = string.Empty, Password = string.Empty }); });
+        
+        Assert.Catch<DuplicateUniqKeyException>(delegate
+        { _service.RegisterUser(new AuthUserDto 
+            { UserName = "user2", Password = "pwd" }); });
+    }
+    
+    [Test]
+    public async Task ChangePassword_Exception()
+    {
+        _userRepository.FakeInit(_fakeUsers);
+        _tokenRepository.FakeInit(_fakeTokens);
+        _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
+        
+        Assert.Catch<InvalidArgumentException>(delegate
+        { _service.ChangePassword(new ChangePwdDto 
+            { UserName = string.Empty, Password = string.Empty, NewPassword = string.Empty}); });
+        
+        Assert.Catch<ParamsMatchException>(delegate
+        { _service.ChangePassword(new ChangePwdDto
+            { UserName = "user3", Password = "pwd3", NewPassword = "pwd3"}); });
+        
+        Assert.Catch<InvalidAuthenticationException>(delegate
+        { _service.ChangePassword(new ChangePwdDto
+            { UserName = "invalidUser", Password = "pwd3", NewPassword = "newPwd"}); });
+        
+        Assert.Catch<InvalidAuthenticationException>(delegate
+        { _service.ChangePassword(new ChangePwdDto
+            { UserName = "user3", Password = "invalidPassword", NewPassword = "newPwd"}); });
+    }
+    
+    [Test]
+    public async Task GetTokens_Exception()
+    {
+        _userRepository.FakeInit(_fakeUsers);
+        _tokenRepository.FakeInit(_fakeTokens);
+        _tokenService.FakeInit(new []{ _fakeTokens[0] }, new []{ _fakeIdUsers[0] });
+        
+        Assert.Catch<InvalidArgumentException>(delegate
+        { _service.GetTokensByRefreshToken(string.Empty,
+            out _, out _); });
+        
+        Assert.Catch<NotFoundException>(delegate
+        { _service.GetTokensByRefreshToken("fakeToken", 
+            out _, out _); });
+        
+        Assert.Catch<InvalidTokenException>(delegate
+        { _service.GetTokensByRefreshToken("token4", 
+            out _, out _); });
+    }
+    
+    [Test]
+    public async Task RemoveRefreshToken_Exception()
+    {
+        _userRepository.FakeInit(_fakeUsers);
+        _tokenRepository.FakeInit(_fakeTokens);
+        _tokenService.FakeInit(new []{ _fakeTokens[0] }, new []{ _fakeIdUsers[0] });
+
+        Assert.Catch<InvalidArgumentException>(delegate 
+        { _service.RemoveRefreshToken(string.Empty); });
+
+        Assert.Catch<NotFoundException>(delegate
+        { _service.RemoveRefreshToken("fakeToken"); });
+    }
+    
+    [Test]
+    public async Task ValidateAccessToken_Exception()
+    {
+        _userRepository.FakeInit(_fakeUsers);
+        _tokenRepository.FakeInit(_fakeTokens);
+        _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
+        
+        _service.GetTokensByRefreshToken("token5", 
+            out _, out var accessToken);
+
+        Assert.Catch<InvalidArgumentException>(delegate 
+            { _service.ValidateAccessToken(string.Empty, out _); });
     }
 }

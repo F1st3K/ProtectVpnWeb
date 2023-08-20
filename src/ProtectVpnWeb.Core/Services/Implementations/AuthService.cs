@@ -94,6 +94,9 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
                 new ExceptionParameter(dto.Password, nameof(dto.Password)),
                 new ExceptionParameter(dto.NewPassword, nameof(dto.NewPassword)));
 
+        if (UserRepository.CheckNameUniqueness(dto.UserName))
+            throw new InvalidAuthenticationException();
+
         var user = UserRepository.GetByUniqueName(dto.UserName);
         if (user.HashPassword != Hasher.GetHash(dto.Password))
             throw new InvalidAuthenticationException();
@@ -146,6 +149,10 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
 
     public bool ValidateAccessToken(string token, out UserRoles? role)
     {
+        if (token == string.Empty)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(token, nameof(token)));
+        
         role = null;
         if (TokenService.ValidateToken(token) == false)
             return false;
