@@ -4,7 +4,7 @@ using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
 using ProtectVpnWeb.Core.Services.Implementations;
 
-namespace ProtectVpnWeb.Tests.ConnectionService;
+namespace ProtectVpnWeb.CoreTests.ConnectionService;
 
 public class Tests
 {
@@ -40,7 +40,7 @@ public class Tests
         _vpnService.GetById(dto.Id).ToTransfer().ToTransfer().AreEqual(dto);
     
     [Test]
-    public async Task Get_Success()
+    public void Get_Success()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -56,7 +56,7 @@ public class Tests
     }
 
     [Test]
-    public async Task GetRange_Success()
+    public void GetRange_Success()
     {
         _repository.FakeInit(_fakeConnections);
         
@@ -80,7 +80,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Create_Success()
+    public void Create_Success()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -97,7 +97,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Edit_Success()
+    public void Edit_Success()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -115,7 +115,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Remove_Success()
+    public void Remove_Success()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();

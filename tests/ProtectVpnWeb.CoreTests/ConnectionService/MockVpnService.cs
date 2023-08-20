@@ -1,6 +1,6 @@
 using ProtectVpnWeb.Core.Services;
 
-namespace ProtectVpnWeb.Tests.ConnectionService;
+namespace ProtectVpnWeb.CoreTests.ConnectionService;
 
 public class MockVpnService : IVpnService<MockClientConnection>
 {
@@ -20,26 +20,22 @@ public class MockVpnService : IVpnService<MockClientConnection>
 
     public void UpdateConnection(MockClientConnection connection)
     {
-        foreach (var c in _connections)
+        foreach (var c in 
+                 _connections.Where(c => c.Id == connection.Id))
         {
-            if (c.Id == connection.Id)
-            {
-                _connections.Remove(c);
-                _connections.Add(connection);
-                return;
-            }
+            _connections.Remove(c);
+            _connections.Add(connection);
+            return;
         }
     }
 
     public void RemoveConnection(MockClientConnection connection)
     {
-        foreach (var c in _connections)
+        foreach (var c in 
+                 _connections.Where(c => c.Id == connection.Id))
         {
-            if (c.Id == connection.Id)
-            {
-                _connections.Remove(c);
-                return;
-            }
+            _connections.Remove(c);
+            return;
         }
     }
 
@@ -61,12 +57,6 @@ public class MockVpnService : IVpnService<MockClientConnection>
 
     public MockClientConnection GetById(int id)
     {
-        foreach (var fc in _connections)
-        {
-            if (id == fc.Id)
-                return fc;
-        }
-
-        return null;
+        return _connections.FirstOrDefault(fc => id == fc.Id);
     }
 }

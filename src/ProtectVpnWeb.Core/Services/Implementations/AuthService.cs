@@ -23,12 +23,11 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
     
     private THasher Hasher { get; }
     
-    public AuthService(
-        TUserRepository userRepository,
+    public AuthService(TUserRepository userRepository,
         TRefreshTokenRepository refreshTokenRepository,
         TTokenService tokenService,
-        TimeLiveTokensDto timeLiveTokens,
-        THasher hasher)
+        THasher hasher,
+        TimeLiveTokensDto timeLiveTokens)
     {
         UserRepository = userRepository;
         RefreshTokenRepository = refreshTokenRepository;
@@ -37,29 +36,6 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         Hasher = hasher;
     }
     
-    public string RegisterUser(AuthUserDto dto)
-    {
-        if (dto.Password == string.Empty ||
-            dto.UserName == string.Empty)
-            throw new InvalidArgumentException(
-                new ExceptionParameter(dto.Password, nameof(dto.Password)),
-                new ExceptionParameter(dto.UserName, nameof(dto.UserName)));
-
-        if (UserRepository.CheckNameUniqueness(dto.UserName) == false)
-            throw new DuplicateUniqKeyException(
-                new ExceptionParameter(dto.UserName, nameof(dto.UserName)));
-
-        var user = new User(
-            UserRepository.GetNextId(),
-            dto.UserName,
-            Hasher.GetHash(dto.Password),
-            null
-        );
-        UserRepository.Add(user);
-        
-        return AuthUser(dto);
-    }
-
     public string AuthUser(AuthUserDto dto)
     {
         if (dto.Password == string.Empty ||
@@ -80,7 +56,29 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         RefreshTokenRepository.AddToken(refresh);
         return refresh;
     }
+    
+    public string RegisterUser(AuthUserDto dto)
+    {
+        if (dto.Password == string.Empty ||
+            dto.UserName == string.Empty)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(dto.Password, nameof(dto.Password)),
+                new ExceptionParameter(dto.UserName, nameof(dto.UserName)));
 
+        if (UserRepository.CheckNameUniqueness(dto.UserName) == false)
+            throw new DuplicateUniqKeyException(
+                new ExceptionParameter(dto.UserName, nameof(dto.UserName)));
+
+        var user = new User(
+            UserRepository.GetNextId(),
+            dto.UserName,
+            Hasher.GetHash(dto.Password)
+        );
+        UserRepository.Add(user);
+        
+        return AuthUser(dto);
+    }
+    
     public string ChangePassword(ChangePwdDto dto)
     {
         if (dto.Password == string.Empty ||
@@ -96,8 +94,13 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
                 new ExceptionParameter(dto.Password, nameof(dto.Password)),
                 new ExceptionParameter(dto.NewPassword, nameof(dto.NewPassword)));
 
-        AuthUser(new AuthUserDto { UserName = dto.UserName, Password = dto.NewPassword });
+        if (UserRepository.CheckNameUniqueness(dto.UserName))
+            throw new InvalidAuthenticationException();
+
         var user = UserRepository.GetByUniqueName(dto.UserName);
+        if (user.HashPassword != Hasher.GetHash(dto.Password))
+            throw new InvalidAuthenticationException();
+        
         var editUser = new User(user.Id, user.UniqueName, 
             Hasher.GetHash(dto.NewPassword), user.Role);
         UserRepository.Update(editUser);
@@ -146,6 +149,10 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
 
     public bool ValidateAccessToken(string token, out UserRoles? role)
     {
+        if (token == string.Empty)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(token, nameof(token)));
+        
         role = null;
         if (TokenService.ValidateToken(token) == false)
             return false;

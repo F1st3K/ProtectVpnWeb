@@ -17,12 +17,12 @@ public sealed class User : IEntity, ITransfer<UserDto>, IHasUniqueName
         int id,
         string uniqueName,
         string hashPassword,
-        UserRoles? role)
+        UserRoles role = UserRoles.User)
     {
         Id = id;
         UniqueName = uniqueName;
         HashPassword = hashPassword;
-        Role = role ?? UserRoles.User;
+        Role = role;
     }
 
     public UserDto ToTransfer()

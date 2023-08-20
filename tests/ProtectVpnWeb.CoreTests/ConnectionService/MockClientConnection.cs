@@ -1,7 +1,7 @@
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Entities.Interfaces;
 
-namespace ProtectVpnWeb.Tests.ConnectionService;
+namespace ProtectVpnWeb.CoreTests.ConnectionService;
 
 public class MockClientConnection : ITransfer<Connection>
 {

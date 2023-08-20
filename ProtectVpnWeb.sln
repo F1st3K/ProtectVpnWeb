@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtectVpnWeb.Core", "src\P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtectVpnWeb.Data", "src\ProtectVpnWeb.Data\ProtectVpnWeb.Data.csproj", "{0C7B9584-0B55-40B6-83FA-324727C1F1F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtectVpnWeb.Tests", "tests\ProtectVpnWeb.Tests\ProtectVpnWeb.Tests.csproj", "{D7554869-8511-4DC6-AFAC-BA5C344538D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtectVpnWeb.CoreTests", "tests\ProtectVpnWeb.CoreTests\ProtectVpnWeb.CoreTests.csproj", "{D7554869-8511-4DC6-AFAC-BA5C344538D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

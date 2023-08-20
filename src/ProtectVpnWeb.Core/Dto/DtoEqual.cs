@@ -1,3 +1,4 @@
+using ProtectVpnWeb.Core.Dto.Auth;
 using ProtectVpnWeb.Core.Dto.Connection;
 using ProtectVpnWeb.Core.Dto.User;
 
@@ -9,9 +10,6 @@ public static class DtoEqual
         dto.UniqueName == obj.UniqueName &&
         dto.Id == obj.Id;
     
-    public static bool AreEqual(this UserDto dto, AuthUserDto obj) =>
-        dto.UniqueName == obj.UserName;
-    
     public static bool AreEqual(this ConnectionDto dto, ConnectionDto obj) =>
         dto.Info == obj.Info &&
         dto.UserId == obj.UserId &&
@@ -19,4 +17,15 @@ public static class DtoEqual
     
     public static bool AreEqual(this ConnectionDto dto, CreateConnectionDto obj) =>
         dto.UserId == obj.UserId;
+
+    public static bool AreEqual(this UserIdUnameRoleDto dto, UserIdUnameRoleDto obj) =>
+        dto.UniqueName == obj.UniqueName &&
+        dto.Id == obj.Id &&
+        dto.Role == obj.Role;
+
+    public static bool AreEqual(this UserIdDto dto, UserIdDto obj) =>
+        dto.Id == obj.Id;
+    
+    public static bool AreEqual(this UserIdDto dto, UserIdUnameRoleDto obj) =>
+        dto.Id == obj.Id;
 }

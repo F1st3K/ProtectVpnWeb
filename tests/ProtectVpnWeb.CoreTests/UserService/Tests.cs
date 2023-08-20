@@ -4,7 +4,7 @@ using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
 using ProtectVpnWeb.Core.Services.Implementations;
 
-namespace ProtectVpnWeb.Tests.UserService;
+namespace ProtectVpnWeb.CoreTests.UserService;
 
 public sealed class Tests
 {
@@ -13,11 +13,11 @@ public sealed class Tests
 
     private readonly User[] _fakeUsers =
     {
-        new(0, "user1", "pwd1", null),
-        new(1, "user2", "pwd2", null),
-        new(2, "user3", "pwd3", null),
-        new(3, "user4", "pwd4", null),
-        new(4, "user5", "pwd5", null)
+        new(0, "user1", "pwd1"),
+        new(1, "user2", "pwd2"),
+        new(2, "user3", "pwd3"),
+        new(3, "user4", "pwd4"),
+        new(4, "user5", "pwd5")
     };
 
     public Tests()
@@ -30,7 +30,7 @@ public sealed class Tests
         _repository.GetById(dto.Id).ToTransfer().AreEqual(dto);
     
     [Test]
-    public async Task Get_Success()
+    public void Get_Success()
     {
         _repository.FakeInit(_fakeUsers);
         var user = new UserDto { Id = 2, UniqueName = "user3" };
@@ -47,7 +47,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task GetRange_Success()
+    public void GetRange_Success()
     {
         _repository.FakeInit(_fakeUsers);
         var users = new UserDto[]
@@ -68,7 +68,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task Edit_Success()
+    public void Edit_Success()
     {
         _repository.FakeInit(_fakeUsers);
         var userOfId = new UserDto { Id = 0, UniqueName = "editUser1" };
@@ -87,7 +87,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task Get_Exception()
+    public void Get_Exception()
     {
         _repository.FakeInit(_fakeUsers);
 
@@ -104,7 +104,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task GetRange_Exception()
+    public void GetRange_Exception()
     {
         _repository.FakeInit(_fakeUsers);
 
@@ -120,7 +120,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task Edit_Exception()
+    public void Edit_Exception()
     {
         _repository.FakeInit(_fakeUsers);
 
