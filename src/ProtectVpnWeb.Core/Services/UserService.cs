@@ -67,12 +67,34 @@ public sealed class UserService<TRepository> : IUserService
         }
         return usersDto;
     }
+
+    public void CreateUser(CreateUserDto dto, IHashService hashService)
+    {
+        if (dto.UniqueName == string.Empty ||
+            dto.Password == string.Empty ||
+            Enum.TryParse(dto.Role, out UserRoles role) == false)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(dto.UniqueName, nameof(dto.UniqueName)),
+                new ExceptionParameter(dto.Password, nameof(dto.Password)),
+                new ExceptionParameter(dto.Role, nameof(dto.Role)));
+
+        var id = UserRepository.GetNextId();
+        var user = new User(id, dto.UniqueName, hashService.GetHash(dto.Password), role);
+        UserRepository.Add(user);
+    }
     
     public void EditUser(string userName, UserDto dto)
     {
         if (userName == string.Empty)
             throw new InvalidArgumentException(
                 new ExceptionParameter(userName, nameof(userName)));
+        if (dto.UniqueName == string.Empty ||
+            dto.Id < 0 ||
+            Enum.TryParse(dto.Role, out UserRoles role) == false)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(dto.UniqueName, nameof(dto.UniqueName)),
+                new ExceptionParameter(dto.Id, nameof(dto.Id)),
+                new ExceptionParameter(dto.Role, nameof(dto.Role)));
 
         if (UserRepository.CheckNameUniqueness(userName))
             throw new NotFoundException(
@@ -94,6 +116,13 @@ public sealed class UserService<TRepository> : IUserService
         if (id < 0)
             throw new InvalidArgumentException(
                 new ExceptionParameter(id, nameof(id)));
+        if (dto.UniqueName == string.Empty ||
+            dto.Id < 0 ||
+            Enum.TryParse(dto.Role, out UserRoles role) == false)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(dto.UniqueName, nameof(dto.UniqueName)),
+                new ExceptionParameter(dto.Id, nameof(dto.Id)),
+                new ExceptionParameter(dto.Role, nameof(dto.Role)));
 
         if (UserRepository.CheckIdUniqueness(id))
             throw new NotFoundException(

@@ -105,6 +105,13 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
         if (id < 0)
             throw new InvalidArgumentException(
                 new ExceptionParameter(id, nameof(id)));
+        if (dto.UserId < 0 ||
+            dto.Id < 0 ||
+            dto.Info == string.Empty)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(dto.UserId, nameof(dto.UserId)),
+                new ExceptionParameter(dto.Id, nameof(dto.Id)),
+                new ExceptionParameter(dto.Info, nameof(dto.Info)));
 
         if (ConnectionRepository.CheckIdUniqueness(id))
             throw new NotFoundException(
