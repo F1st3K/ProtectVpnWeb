@@ -4,8 +4,15 @@ namespace ProtectVpnWeb.CoreTests.AuthService;
 
 public class MockHashService : IHashService
 {
+    private string _sol;
+    
+    public MockHashService(string sol)
+    {
+        _sol = sol;
+    }
+    
     public string GetHash(string password)
     {
-        return password + "//hashed";
+        return password + _sol;
     }
 }

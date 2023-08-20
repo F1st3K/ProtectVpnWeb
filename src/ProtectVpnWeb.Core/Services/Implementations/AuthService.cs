@@ -72,8 +72,7 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         var user = new User(
             UserRepository.GetNextId(),
             dto.UserName,
-            Hasher.GetHash(dto.Password),
-            null
+            Hasher.GetHash(dto.Password)
         );
         UserRepository.Add(user);
         
@@ -95,8 +94,10 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
                 new ExceptionParameter(dto.Password, nameof(dto.Password)),
                 new ExceptionParameter(dto.NewPassword, nameof(dto.NewPassword)));
 
-        AuthUser(new AuthUserDto { UserName = dto.UserName, Password = dto.NewPassword });
         var user = UserRepository.GetByUniqueName(dto.UserName);
+        if (user.HashPassword != Hasher.GetHash(dto.Password))
+            throw new InvalidAuthenticationException();
+        
         var editUser = new User(user.Id, user.UniqueName, 
             Hasher.GetHash(dto.NewPassword), user.Role);
         UserRepository.Update(editUser);

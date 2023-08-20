@@ -25,4 +25,13 @@ public class MockTokenService : ITokenService<string>
             return payload;
         throw new InvalidOperationException("Invalid token or payload type (Mock)");
     }
+
+    public void FakeInit<TPayload>(string[] tokens, TPayload[] payloads)
+    {
+        if (tokens.Length != payloads.Length)
+            throw new InvalidOperationException("Count tokens and payloads is not equals");
+        _objects.Clear();
+        for (int i = 0; i < tokens.Length; i++)
+            _objects.Add(tokens[i], payloads[i]!);
+    }
 }
