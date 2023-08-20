@@ -6,6 +6,6 @@ public class MockHashService : IHashService
 {
     public string GetHash(string password)
     {
-        throw new NotImplementedException();
+        return password + "//hashed";
     }
 }

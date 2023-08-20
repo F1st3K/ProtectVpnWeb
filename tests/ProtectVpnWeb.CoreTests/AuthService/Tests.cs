@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using ProtectVpnWeb.Core.Dto.Auth;
 using ProtectVpnWeb.Core.Services.Implementations;
 using ProtectVpnWeb.CoreTests.UserService;
@@ -28,6 +29,11 @@ public sealed class Tests
         _service = new AuthService<
                 MockUserRepository, MockTokenRepository, MockTokenService, MockHashService>
             (_userRepository, _tokenRepository, _tokenService, _hashService, times);
+    }
 
+    [Test]
+    public async Task AuthUser_Success()
+    {
+        
     }
 }

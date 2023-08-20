@@ -4,18 +4,25 @@ namespace ProtectVpnWeb.CoreTests.AuthService;
 
 public class MockTokenService : ITokenService<string>
 {
+    private readonly Dictionary<string, object> _objects = new();
+    
     public string GenerateToken<TPayload>(TPayload payload, TimeSpan expirationTime)
     {
-        throw new NotImplementedException();
+        var token = Guid.NewGuid().ToString();
+        if (payload != null) _objects.Add(token, payload);
+        return token;
     }
 
     public bool ValidateToken(string token)
     {
-        throw new NotImplementedException();
+        return _objects.ContainsKey(token);
     }
 
     public TPayload ReadTokenPayload<TPayload>(string token)
     {
-        throw new NotImplementedException();
+        if (_objects.TryGetValue(token, out var obj) &&
+            obj is TPayload payload)
+            return payload;
+        throw new InvalidOperationException("Invalid token or payload type (Mock)");
     }
 }

@@ -36,6 +36,27 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         Hasher = hasher;
     }
     
+    public string AuthUser(AuthUserDto dto)
+    {
+        if (dto.Password == string.Empty ||
+            dto.UserName == string.Empty)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(dto.Password, nameof(dto.Password)),
+                new ExceptionParameter(dto.UserName, nameof(dto.UserName)));
+
+        if (UserRepository.CheckNameUniqueness(dto.UserName))
+            throw new InvalidAuthenticationException();
+        
+        var user = UserRepository.GetByUniqueName(dto.UserName);
+        if (user.HashPassword != Hasher.GetHash(dto.Password))
+            throw new InvalidAuthenticationException();
+        
+        var refresh = TokenService.GenerateToken(
+            new UserIdDto{ Id = user.Id}, TimeLiveTokens.RefreshAuthToken);
+        RefreshTokenRepository.AddToken(refresh);
+        return refresh;
+    }
+    
     public string RegisterUser(AuthUserDto dto)
     {
         if (dto.Password == string.Empty ||
@@ -58,28 +79,7 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         
         return AuthUser(dto);
     }
-
-    public string AuthUser(AuthUserDto dto)
-    {
-        if (dto.Password == string.Empty ||
-            dto.UserName == string.Empty)
-            throw new InvalidArgumentException(
-                new ExceptionParameter(dto.Password, nameof(dto.Password)),
-                new ExceptionParameter(dto.UserName, nameof(dto.UserName)));
-
-        if (UserRepository.CheckNameUniqueness(dto.UserName))
-            throw new InvalidAuthenticationException();
-        
-        var user = UserRepository.GetByUniqueName(dto.UserName);
-        if (user.HashPassword != Hasher.GetHash(dto.Password))
-            throw new InvalidAuthenticationException();
-        
-        var refresh = TokenService.GenerateToken(
-            new UserIdDto{ Id = user.Id}, TimeLiveTokens.RefreshAuthToken);
-        RefreshTokenRepository.AddToken(refresh);
-        return refresh;
-    }
-
+    
     public string ChangePassword(ChangePwdDto dto)
     {
         if (dto.Password == string.Empty ||

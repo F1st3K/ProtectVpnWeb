@@ -20,12 +20,7 @@ public sealed class MockConnectionRepository : IRepository<Connection>
 
     public bool CheckIdUniqueness(int id)
     {
-        foreach (var connection in _connections)
-        {
-            if (connection.Id == id)
-                return false;
-        }
-        return true;
+        return _connections.All(connection => connection.Id != id);
     }
 
     public void Add(Connection entity)
@@ -36,13 +31,7 @@ public sealed class MockConnectionRepository : IRepository<Connection>
 
     public Connection GetById(int id)
     {
-        foreach (var connection in _connections)
-        {
-            if (connection.Id == id)
-                return connection;
-        }
-
-        return null;
+        return _connections.FirstOrDefault(connection => connection.Id == id);
     }
 
     public Connection[] GetRange(int index, int count)
@@ -52,26 +41,20 @@ public sealed class MockConnectionRepository : IRepository<Connection>
 
     public void Update(Connection entity)
     {
-        foreach (var connection in _connections)
+        foreach (var connection in _connections.Where(connection => connection.Id == entity.Id))
         {
-            if (connection.Id == entity.Id)
-            {
-                _connections.Remove(connection);
-                _connections.Add(entity);
-                return;
-            }
+            _connections.Remove(connection);
+            _connections.Add(entity);
+            return;
         }
     }
 
     public void Remove(int id)
     {
-        foreach (var connection in _connections)
+        foreach (var connection in _connections.Where(connection => connection.Id == id))
         {
-            if (connection.Id == id)
-            {
-                _connections.Remove(connection);
-                return;
-            }
+            _connections.Remove(connection);
+            return;
         }
     }
 
@@ -81,7 +64,7 @@ public sealed class MockConnectionRepository : IRepository<Connection>
         Count = 0;
     }
     
-    public void FakeInit(Connection[] connections)
+    public void FakeInit(IEnumerable<Connection> connections)
     {
         Clear();
         foreach (var c in connections)
