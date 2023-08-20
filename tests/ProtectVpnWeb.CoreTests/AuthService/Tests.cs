@@ -55,7 +55,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task AuthUser_Success()
+    public void AuthUser_Success()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -73,7 +73,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task RegisterUser_Success()
+    public void RegisterUser_Success()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -91,7 +91,7 @@ public sealed class Tests
     }
     
     [Test]
-    public async Task ChangePassword_Success()
+    public void ChangePassword_Success()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -106,7 +106,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task GetTokens_Success()
+    public void GetTokens_Success()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -132,7 +132,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task RemoveRefreshToken_Success()
+    public void RemoveRefreshToken_Success()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -145,7 +145,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task ValidateAccessToken_Success()
+    public void ValidateAccessToken_Success()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -167,7 +167,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task AuthUser_Exception()
+    public void AuthUser_Exception()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -187,7 +187,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task RegisterUser_Exception()
+    public void RegisterUser_Exception()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -203,7 +203,7 @@ public sealed class Tests
     }
     
     [Test]
-    public async Task ChangePassword_Exception()
+    public void ChangePassword_Exception()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -227,7 +227,7 @@ public sealed class Tests
     }
     
     [Test]
-    public async Task GetTokens_Exception()
+    public void GetTokens_Exception()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -247,7 +247,7 @@ public sealed class Tests
     }
     
     [Test]
-    public async Task RemoveRefreshToken_Exception()
+    public void RemoveRefreshToken_Exception()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);
@@ -261,7 +261,7 @@ public sealed class Tests
     }
     
     [Test]
-    public async Task ValidateAccessToken_Exception()
+    public void ValidateAccessToken_Exception()
     {
         _userRepository.FakeInit(_fakeUsers);
         _tokenRepository.FakeInit(_fakeTokens);

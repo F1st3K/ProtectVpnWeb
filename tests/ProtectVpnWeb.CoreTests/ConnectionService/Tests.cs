@@ -40,7 +40,7 @@ public class Tests
         _vpnService.GetById(dto.Id).ToTransfer().ToTransfer().AreEqual(dto);
     
     [Test]
-    public async Task Get_Success()
+    public void Get_Success()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -56,7 +56,7 @@ public class Tests
     }
 
     [Test]
-    public async Task GetRange_Success()
+    public void GetRange_Success()
     {
         _repository.FakeInit(_fakeConnections);
         
@@ -80,7 +80,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Create_Success()
+    public void Create_Success()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -97,7 +97,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Edit_Success()
+    public void Edit_Success()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -115,7 +115,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Remove_Success()
+    public void Remove_Success()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -132,7 +132,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Get_Exception()
+    public void Get_Exception()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -145,7 +145,7 @@ public class Tests
     }
 
     [Test]
-    public async Task GetRange_Exception()
+    public void GetRange_Exception()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -162,7 +162,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Create_Exception()
+    public void Create_Exception()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -176,7 +176,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Edit_Exception()
+    public void Edit_Exception()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();
@@ -200,7 +200,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Remove_Exception()
+    public void Remove_Exception()
     {
         _repository.FakeInit(_fakeConnections);
         _service.Restart();

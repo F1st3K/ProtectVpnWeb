@@ -30,7 +30,7 @@ public sealed class Tests
         _repository.GetById(dto.Id).ToTransfer().AreEqual(dto);
     
     [Test]
-    public async Task Get_Success()
+    public void Get_Success()
     {
         _repository.FakeInit(_fakeUsers);
         var user = new UserDto { Id = 2, UniqueName = "user3" };
@@ -47,7 +47,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task GetRange_Success()
+    public void GetRange_Success()
     {
         _repository.FakeInit(_fakeUsers);
         var users = new UserDto[]
@@ -68,7 +68,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task Edit_Success()
+    public void Edit_Success()
     {
         _repository.FakeInit(_fakeUsers);
         var userOfId = new UserDto { Id = 0, UniqueName = "editUser1" };
@@ -87,7 +87,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task Get_Exception()
+    public void Get_Exception()
     {
         _repository.FakeInit(_fakeUsers);
 
@@ -104,7 +104,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task GetRange_Exception()
+    public void GetRange_Exception()
     {
         _repository.FakeInit(_fakeUsers);
 
@@ -120,7 +120,7 @@ public sealed class Tests
     }
 
     [Test]
-    public async Task Edit_Exception()
+    public void Edit_Exception()
     {
         _repository.FakeInit(_fakeUsers);
 
