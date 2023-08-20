@@ -3,8 +3,9 @@ using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
 using ProtectVpnWeb.Core.Repositories;
+using ProtectVpnWeb.Core.Services.Interfaces;
 
-namespace ProtectVpnWeb.Core.Services.Implementations;
+namespace ProtectVpnWeb.Core.Services;
 
 public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TTokenService, THasher>
     : IAuthService

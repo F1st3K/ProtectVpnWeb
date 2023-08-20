@@ -1,4 +1,5 @@
 using ProtectVpnWeb.Core.Services;
+using ProtectVpnWeb.Core.Services.Interfaces;
 
 namespace ProtectVpnWeb.CoreTests.AuthService;
 

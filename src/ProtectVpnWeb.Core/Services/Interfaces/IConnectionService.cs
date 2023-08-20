@@ -1,6 +1,6 @@
 using ProtectVpnWeb.Core.Dto.Connection;
 
-namespace ProtectVpnWeb.Core.Services;
+namespace ProtectVpnWeb.Core.Services.Interfaces;
 
 public interface IConnectionService
 {

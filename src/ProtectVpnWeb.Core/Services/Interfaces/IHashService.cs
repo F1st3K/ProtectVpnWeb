@@ -1,6 +1,4 @@
-using ProtectVpnWeb.Core.Entities.Interfaces;
-
-namespace ProtectVpnWeb.Core.Services;
+namespace ProtectVpnWeb.Core.Services.Interfaces;
 
 public interface IHashService
 {

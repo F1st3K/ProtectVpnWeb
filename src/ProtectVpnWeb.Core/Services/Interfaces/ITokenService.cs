@@ -1,4 +1,4 @@
-namespace ProtectVpnWeb.Core.Services;
+namespace ProtectVpnWeb.Core.Services.Interfaces;
 
 public interface ITokenService<TToken>
     where TToken : notnull

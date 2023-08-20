@@ -2,8 +2,9 @@ using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
 using ProtectVpnWeb.Core.Repositories;
+using ProtectVpnWeb.Core.Services.Interfaces;
 
-namespace ProtectVpnWeb.Core.Services.Implementations;
+namespace ProtectVpnWeb.Core.Services;
 
 public sealed class UserService<TRepository> : IUserService
     where TRepository : IRepository<User>, IUniqueNameRepository<User>

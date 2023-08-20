@@ -3,7 +3,7 @@ using ProtectVpnWeb.Core.Dto.Auth;
 using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
-using ProtectVpnWeb.Core.Services.Implementations;
+using ProtectVpnWeb.Core.Services;
 using ProtectVpnWeb.CoreTests.UserService;
 
 namespace ProtectVpnWeb.CoreTests.AuthService;

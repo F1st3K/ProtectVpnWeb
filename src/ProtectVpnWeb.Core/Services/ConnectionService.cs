@@ -3,8 +3,9 @@ using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Entities.Interfaces;
 using ProtectVpnWeb.Core.Exceptions;
 using ProtectVpnWeb.Core.Repositories;
+using ProtectVpnWeb.Core.Services.Interfaces;
 
-namespace ProtectVpnWeb.Core.Services.Implementations;
+namespace ProtectVpnWeb.Core.Services;
 
 public sealed class ConnectionService<TRepository, TClientConnection, TVpnManager> : IConnectionService
     where TRepository : IRepository<Connection>

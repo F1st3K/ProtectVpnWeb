@@ -1,7 +1,7 @@
 using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
 
-namespace ProtectVpnWeb.Core.Services;
+namespace ProtectVpnWeb.Core.Services.Interfaces;
 
 public interface IAuthService
 {

@@ -2,7 +2,7 @@ using ProtectVpnWeb.Core.Dto;
 using ProtectVpnWeb.Core.Dto.Connection;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
-using ProtectVpnWeb.Core.Services.Implementations;
+using ProtectVpnWeb.Core.Services;
 
 namespace ProtectVpnWeb.CoreTests.ConnectionService;
 
