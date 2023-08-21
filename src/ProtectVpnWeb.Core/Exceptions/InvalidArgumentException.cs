@@ -11,7 +11,7 @@ public class InvalidArgumentException : ArgumentException
     {
         var msg = new StringBuilder("Invalid data:");
         foreach (var parameter in parameters)
-            msg.AppendLine($"\t{parameter.Name} -> {parameter.Param.ToString()}");
+            msg.AppendLine($"\t{parameter.Name} -> {parameter.Param}");
         return msg.ToString();
     }
 }
