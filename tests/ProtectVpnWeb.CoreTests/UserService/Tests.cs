@@ -72,9 +72,12 @@ public sealed class Tests
     public void Edit_Success()
     {
         _repository.FakeInit(_fakeUsers);
-        var userOfId = new UserDto { Id = 0, UniqueName = "editUser1" };
-        var userOfUname = new UserDto { Id = 1, UniqueName = "editUser2" };
-        var expected = new UserDto { Id = 0, UniqueName = "user2" };
+        var userOfId = new UserDto 
+            { Id = 0, UniqueName = "editUser1", Role = UserRoles.User.ToString()};
+        var userOfUname = new UserDto 
+            { Id = 1, UniqueName = "editUser2", Role = UserRoles.User.ToString()};
+        var expected = new UserDto 
+            { Id = 0, UniqueName = "user2", Role = UserRoles.User.ToString()};
 
         _service.EditUser(expected.Id, userOfId);
         _service.EditUser(expected.UniqueName, userOfUname);
@@ -102,6 +105,23 @@ public sealed class Tests
         {
             Assert.That(user.HashPassword, Is.EqualTo(hasher.GetHash(newUser.Password)));
             Assert.That(user.Role, Is.EqualTo(UserRoles.Admin));
+        });
+    }
+    
+    [Test]
+    public void Remove_Success()
+    {
+        _repository.FakeInit(_fakeUsers);
+        const int id = 3;
+        const string uname = "user5";
+
+        _service.RemoveUser(id);
+        _service.RemoveUser(uname);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(_repository.CheckIdUniqueness(id), Is.True);
+            Assert.That(_repository.CheckNameUniqueness(uname), Is.True);
         });
     }
 
@@ -146,7 +166,8 @@ public sealed class Tests
         var dto = new UserDto
         {
             Id = 0,
-            UniqueName = "user1"
+            UniqueName = "user1",
+            Role = UserRoles.User.ToString()
         };
 
         Assert.Catch<InvalidArgumentException>(delegate
@@ -183,9 +204,8 @@ public sealed class Tests
             new MockHashService(string.Empty)); });
 
         Assert.Catch<InvalidArgumentException>(delegate
-        { _service.CreateUser(
-            new CreateUserDto
-                { UniqueName = "user7", Role = UserRoles.User.ToString(), Password = string.Empty },
+        { _service.CreateUser(new CreateUserDto
+            { UniqueName = "user7", Role = UserRoles.User.ToString(), Password = string.Empty },
             new MockHashService(string.Empty)); });
 
         Assert.Catch<InvalidArgumentException>(delegate
@@ -193,5 +213,24 @@ public sealed class Tests
             new CreateUserDto
                 { UniqueName = "user7", Role = "user", Password = "pwd" },
             new MockHashService(string.Empty)); });
+    }
+
+    [Test]
+    public void Remove_Exception()
+    {
+        _repository.FakeInit(_fakeUsers);
+
+        Assert.Catch<InvalidArgumentException>(delegate { _service.RemoveUser(-1); });
+        Assert.Catch<InvalidArgumentException>(delegate 
+            { _service.RemoveUser(string.Empty); });
+        
+        var id = _repository.Count;
+        while (_repository.CheckIdUniqueness(id) == false) id++;
+        Assert.Catch<NotFoundException>(delegate { _service.RemoveUser(id); });
+        
+        var uname = new Guid().ToString();
+        while (_repository.CheckNameUniqueness(uname) == false) uname = new Guid().ToString();
+        Assert.Catch<NotFoundException>(delegate 
+            { _service.RemoveUser(uname); });
     }
 }
