@@ -3,7 +3,8 @@ using ProtectVpnWeb.Core.Repositories;
 
 namespace ProtectVpnWeb.CoreTests.ConnectionService;
 
-public sealed class MockConnectionRepository : IRepository<Connection>
+public sealed class MockConnectionRepository : IRepository<Connection>,
+    IOneRelationshipRepository<Connection, User>
 {
     private readonly List<Connection> _connections = new();
 
@@ -69,5 +70,10 @@ public sealed class MockConnectionRepository : IRepository<Connection>
         Clear();
         foreach (var c in connections)
             Add(c);
+    }
+
+    public User GetRelatedEntity(Connection source)
+    {
+        throw new NotImplementedException();
     }
 }

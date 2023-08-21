@@ -6,5 +6,5 @@ public interface IManyRelationshipsRepository<in TSource, out TTarget>
     where TSource : IHasManyRelationships<TTarget>
     where TTarget : IEntity
 {
-    public TTarget[] GetRelatedEntities(TSource relation);
+    public TTarget[] GetRelatedEntities(TSource source);
 }

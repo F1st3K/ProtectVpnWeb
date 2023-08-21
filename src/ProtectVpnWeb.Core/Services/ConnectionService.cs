@@ -8,7 +8,7 @@ using ProtectVpnWeb.Core.Services.Interfaces;
 namespace ProtectVpnWeb.Core.Services;
 
 public sealed class ConnectionService<TRepository, TClientConnection, TVpnManager> : IConnectionService
-    where TRepository : IRepository<Connection>
+    where TRepository : IRepository<Connection>, IOneRelationshipRepository<Connection, User>
     where TClientConnection : ITransfer<Connection>, new()
     where TVpnManager : IVpnService<TClientConnection>
 {

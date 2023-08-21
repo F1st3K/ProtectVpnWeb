@@ -1,9 +1,11 @@
 using ProtectVpnWeb.Core.Entities;
+using ProtectVpnWeb.Core.Entities.Interfaces;
 using ProtectVpnWeb.Core.Repositories;
 
 namespace ProtectVpnWeb.CoreTests.UserService;
 
-public sealed class MockUserRepository : IRepository<User>, IUniqueNameRepository<User>
+public sealed class MockUserRepository : IRepository<User>, IUniqueNameRepository<User>,
+    IManyRelationshipsRepository<User, Connection>
 {
     private readonly List<User> _users = new();
 
@@ -88,5 +90,10 @@ public sealed class MockUserRepository : IRepository<User>, IUniqueNameRepositor
     {
         _users.Clear();
         Count = 0;
+    }
+
+    public Connection[] GetRelatedEntities(User source)
+    {
+        throw new NotImplementedException();
     }
 }

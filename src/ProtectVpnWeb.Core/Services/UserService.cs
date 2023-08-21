@@ -7,7 +7,8 @@ using ProtectVpnWeb.Core.Services.Interfaces;
 namespace ProtectVpnWeb.Core.Services;
 
 public sealed class UserService<TRepository> : IUserService
-    where TRepository : IRepository<User>, IUniqueNameRepository<User>
+    where TRepository : IRepository<User>, IUniqueNameRepository<User>,
+    IManyRelationshipsRepository<User, Connection>
 {
     private TRepository UserRepository { get; }
 
