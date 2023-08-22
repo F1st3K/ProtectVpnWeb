@@ -149,10 +149,15 @@ public sealed class Tests
             _fakeConnections[5].ToTransfer(),
         };
 
-        var connectionsDto = _service.GetConnectionsByUser(user.Id);
+        var connectionsDtoById = _service.GetConnectionsByUser(user.Id);
+        var connectionsDtoByUname = _service.GetConnectionsByUser(user.UniqueName);
 
-        for (int i = 0; i < connectionsDto.Length; i++)
-            Assert.That(connectionsDto[i].AreEqual(connections[i]), Is.True);
+        for (int i = 0; i < connectionsDtoById.Length; i++)
+            Assert.Multiple(() =>
+            {
+                Assert.That(connectionsDtoById[i].AreEqual(connections[i]), Is.True);
+                Assert.That(connectionsDtoByUname[i].AreEqual(connections[i]), Is.True);
+            });
     }
 
     [Test]
@@ -262,5 +267,27 @@ public sealed class Tests
         while (_repository.CheckNameUniqueness(uname) == false) uname = new Guid().ToString();
         Assert.Catch<NotFoundException>(delegate 
             { _service.RemoveUser(uname); });
+    }
+
+    [Test]
+    public void GetConnectionByUser_Exception()
+    {
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
+        
+        Assert.Catch<InvalidArgumentException>(delegate 
+            { _service.GetConnectionsByUser(-1); });
+        
+        var id = _repository.Count;
+        while (_repository.CheckIdUniqueness(id) == false) id++;
+        Assert.Catch<NotFoundException>(delegate 
+            { _service.GetConnectionsByUser(id); });
+        
+        Assert.Catch<InvalidArgumentException>(delegate 
+            { _service.GetConnectionsByUser(string.Empty); });
+        
+        var uname = new Guid().ToString();
+        while (_repository.CheckNameUniqueness(uname) == false) uname = new Guid().ToString();
+        Assert.Catch<NotFoundException>(delegate 
+            { _service.GetConnectionsByUser(id); });
     }
 }
