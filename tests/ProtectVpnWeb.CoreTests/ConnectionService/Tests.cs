@@ -23,6 +23,15 @@ public class Tests
         new(5, 0, "IP=6"),
         new(6, 1, "IP=7")
     };
+    
+    private readonly User[] _fakeUsers =
+    {
+        new(0, "user1", "pwd1"),
+        new(1, "user2", "pwd2"),
+        new(2, "user3", "pwd3"),
+        new(3, "user4", "pwd4"),
+        new(4, "user5", "pwd5")
+    };
 
     public Tests()
     {
@@ -42,9 +51,9 @@ public class Tests
     [Test]
     public void Get_Success()
     {
-        _repository.FakeInit(_fakeConnections);
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
         _service.Restart();
-        var connectionDto = new ConnectionDto { Id = 0, UserId = 0, Info = "IP=1" };
+        var connectionDto = _fakeConnections[0].ToTransfer();
 
         var connectionOfId = _service.GetConnection(connectionDto.Id);
         Assert.Multiple(() =>
@@ -58,13 +67,13 @@ public class Tests
     [Test]
     public void GetRange_Success()
     {
-        _repository.FakeInit(_fakeConnections);
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
         
         _service.Restart();
         var connections = new ConnectionDto[]
         {
-            new() { Id = 3, UserId = 3, Info = "IP=4" },
-            new() { Id = 4, UserId = 4, Info = "IP=5" },
+            _fakeConnections[3].ToTransfer(),
+            _fakeConnections[4].ToTransfer(),
         };
 
         var connectionDtos = _service.GetConnectionsInRange(3, 2);
@@ -82,7 +91,7 @@ public class Tests
     [Test]
     public void Create_Success()
     {
-        _repository.FakeInit(_fakeConnections);
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
         _service.Restart();
         var createConnectionDto = new CreateConnectionDto { UserId = 0 };
 
@@ -99,7 +108,7 @@ public class Tests
     [Test]
     public void Edit_Success()
     {
-        _repository.FakeInit(_fakeConnections);
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
         _service.Restart();
         var connection = new ConnectionDto { Id = 1, UserId = 4, Info = "IP=101" };
 
@@ -117,7 +126,7 @@ public class Tests
     [Test]
     public void Remove_Success()
     {
-        _repository.FakeInit(_fakeConnections);
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
         _service.Restart();
         var id = 6;
         
@@ -132,9 +141,22 @@ public class Tests
     }
 
     [Test]
+    public void GetUserByConnection_Success()
+    {
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
+        _service.Restart();
+        var id = 5;
+        var fakeUser = _fakeUsers[0];
+
+        var user = _service.GetUserByConnection(5);
+        
+        Assert.That(user.AreEqual(fakeUser.ToTransfer()), Is.True);
+    }
+
+    [Test]
     public void Get_Exception()
     {
-        _repository.FakeInit(_fakeConnections);
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
         _service.Restart();
 
         Assert.Catch<InvalidArgumentException>(delegate { _service.GetConnection(-1); });
@@ -147,7 +169,7 @@ public class Tests
     [Test]
     public void GetRange_Exception()
     {
-        _repository.FakeInit(_fakeConnections);
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
         _service.Restart();
 
         Assert.Catch<InvalidArgumentException>(delegate
@@ -164,7 +186,7 @@ public class Tests
     [Test]
     public void Create_Exception()
     {
-        _repository.FakeInit(_fakeConnections);
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
         _service.Restart();
         
         Assert.Catch<InvalidArgumentException>(delegate 
@@ -178,14 +200,9 @@ public class Tests
     [Test]
     public void Edit_Exception()
     {
-        _repository.FakeInit(_fakeConnections);
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
         _service.Restart();
-        var dto = new ConnectionDto
-        {
-            Id = 0,
-            UserId = 0,
-            Info = "IP=1"
-        };
+        var dto = _fakeConnections[0].ToTransfer();
         
         Assert.Catch<InvalidArgumentException>(delegate 
             { _service.EditConnection(-1, dto); });
@@ -202,7 +219,7 @@ public class Tests
     [Test]
     public void Remove_Exception()
     {
-        _repository.FakeInit(_fakeConnections);
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
         _service.Restart();
 
         Assert.Catch<InvalidArgumentException>(delegate 
@@ -212,5 +229,20 @@ public class Tests
         while (_repository.CheckIdUniqueness(id) == false) id++;
         Assert.Catch<NotFoundException>(delegate 
             { _service.RemoveConnection(id); });
+    }
+    
+    [Test]
+    public void GetUserByConnection_Exception()
+    {
+        _repository.FakeInit(_fakeConnections, _fakeUsers);
+        _service.Restart();
+        
+        Assert.Catch<InvalidArgumentException>(delegate 
+            { _service.GetUserByConnection(-1); });
+        
+        var id = _repository.Count;
+        while (_repository.CheckIdUniqueness(id) == false) id++;
+        Assert.Catch<NotFoundException>(delegate 
+            { _service.GetUserByConnection(id); });
     }
 }

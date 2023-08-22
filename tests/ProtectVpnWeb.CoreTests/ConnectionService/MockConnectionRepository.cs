@@ -7,6 +7,7 @@ public sealed class MockConnectionRepository : IRepository<Connection>,
     IOneRelationshipRepository<Connection, User>
 {
     private readonly List<Connection> _connections = new();
+    private readonly List<User> _users = new();
 
     public int Count { get; private set; }
     public int GetNextId()
@@ -62,18 +63,20 @@ public sealed class MockConnectionRepository : IRepository<Connection>,
     public void Clear()
     {
         _connections.Clear();
+        _users.Clear();
         Count = 0;
     }
     
-    public void FakeInit(IEnumerable<Connection> connections)
+    public void FakeInit(IEnumerable<Connection> connections, IEnumerable<User> users)
     {
         Clear();
-        foreach (var c in connections)
-            Add(c);
+        foreach (var c in connections) Add(c);
+        foreach (var u in users) _users.Add(u);
     }
 
     public User GetRelatedEntity(Connection source)
     {
-        throw new NotImplementedException();
+        var user = _users.Find(user => user.Id == source.UserId);
+        return user;
     }
 }
