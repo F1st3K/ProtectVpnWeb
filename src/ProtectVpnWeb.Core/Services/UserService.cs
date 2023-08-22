@@ -1,3 +1,4 @@
+using ProtectVpnWeb.Core.Dto.Connection;
 using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
@@ -19,31 +20,17 @@ public sealed class UserService<TRepository> : IUserService
 
     public UserDto GetUser(string userName)
     {
-        if (userName == string.Empty)
-            throw new InvalidArgumentException(
-                new ExceptionParameter(userName, nameof(userName)));
-
-        if (UserRepository.CheckNameUniqueness(userName))
-            throw new NotFoundException(
-                new ExceptionParameter(userName, nameof(userName)));
-
-        var user = UserRepository.GetByUniqueName(userName);
-
+        if (TryGetUser(userName, out var user) == false || user is null)
+            throw new NotFoundException(new ExceptionParameter(userName, nameof(userName)));
+        
         return user.ToTransfer();
     }
     
     public UserDto GetUser(int id)
     {
-        if (id < 0)
-            throw new InvalidArgumentException(
-                new ExceptionParameter(id, nameof(id)));
-
-        if (UserRepository.CheckIdUniqueness(id))
-            throw new NotFoundException(
-                new ExceptionParameter(id, nameof(id)));
-
-        var user = UserRepository.GetById(id);
-
+        if (TryGetUser(id, out var user) == false || user is null)
+            throw new NotFoundException(new ExceptionParameter(id, nameof(id)));
+        
         return user.ToTransfer();
     }
 
@@ -60,13 +47,25 @@ public sealed class UserService<TRepository> : IUserService
                 new ExceptionParameter(UserRepository.Count, nameof(UserRepository.Count)));
 
         var users = UserRepository.GetRange(startIndex, count);
+        return Array.ConvertAll(users, input => input.ToTransfer());
+    }
+
+    public ConnectionDto[] GetConnectionsByUser(string userName)
+    {
+        if (TryGetUser(userName, out var user) == false || user is null)
+            throw new NotFoundException(new ExceptionParameter(userName, nameof(userName)));
         
-        var usersDto = new UserDto[users.Length];
-        for (int i = 0; i < users.Length; i++)
-        {
-            usersDto[i] = users[i].ToTransfer();
-        }
-        return usersDto;
+        var connections = UserRepository.GetRelatedEntities(user);
+        return Array.ConvertAll(connections, input => input.ToTransfer());
+    }
+    
+    public ConnectionDto[] GetConnectionsByUser(int id)
+    {
+        if (TryGetUser(id, out var user) == false || user is null)
+            throw new NotFoundException(new ExceptionParameter(id, nameof(id)));
+        
+        var connections = UserRepository.GetRelatedEntities(user);
+        return Array.ConvertAll(connections, input => input.ToTransfer());
     }
 
     public void CreateUser(CreateUserDto dto, IHashService hashService)
@@ -86,22 +85,16 @@ public sealed class UserService<TRepository> : IUserService
     
     public void EditUser(string userName, UserDto dto)
     {
-        if (userName == string.Empty)
-            throw new InvalidArgumentException(
-                new ExceptionParameter(userName, nameof(userName)));
+        if (TryGetUser(userName, out var user) == false || user is null)
+            throw new NotFoundException(new ExceptionParameter(userName, nameof(userName)));
+        
         if (dto.UniqueName == string.Empty ||
             dto.Id < 0 ||
-            Enum.TryParse(dto.Role, out UserRoles role) == false)
+            Enum.TryParse(dto.Role, out UserRoles _) == false)
             throw new InvalidArgumentException(
                 new ExceptionParameter(dto.UniqueName, nameof(dto.UniqueName)),
                 new ExceptionParameter(dto.Id, nameof(dto.Id)),
                 new ExceptionParameter(dto.Role, nameof(dto.Role)));
-
-        if (UserRepository.CheckNameUniqueness(userName))
-            throw new NotFoundException(
-                new ExceptionParameter(userName, nameof(userName)));
-
-        var user = UserRepository.GetByUniqueName(userName);
         
         if (user.Id != dto.Id)
             throw new NonIdenticalException(
@@ -114,23 +107,17 @@ public sealed class UserService<TRepository> : IUserService
     
     public void EditUser(int id, UserDto dto)
     {
-        if (id < 0)
-            throw new InvalidArgumentException(
-                new ExceptionParameter(id, nameof(id)));
+        if (TryGetUser(id, out var user) == false || user is null)
+            throw new NotFoundException(new ExceptionParameter(id, nameof(id)));
+        
         if (dto.UniqueName == string.Empty ||
             dto.Id < 0 ||
-            Enum.TryParse(dto.Role, out UserRoles role) == false)
+            Enum.TryParse(dto.Role, out UserRoles _) == false)
             throw new InvalidArgumentException(
                 new ExceptionParameter(dto.UniqueName, nameof(dto.UniqueName)),
                 new ExceptionParameter(dto.Id, nameof(dto.Id)),
                 new ExceptionParameter(dto.Role, nameof(dto.Role)));
-
-        if (UserRepository.CheckIdUniqueness(id))
-            throw new NotFoundException(
-                new ExceptionParameter(id, nameof(id)));
-
-        var user = UserRepository.GetById(id);
-
+        
         if (user.Id != dto.Id)
             throw new NonIdenticalException(
                 new ExceptionParameter(user.Id, nameof(user.Id)),
@@ -142,27 +129,47 @@ public sealed class UserService<TRepository> : IUserService
 
     public void RemoveUser(int id)
     {
-        if (id < 0)
-            throw new InvalidArgumentException(
-                new ExceptionParameter(id, nameof(id)));
-
-        if (UserRepository.CheckIdUniqueness(id))
+        if (TryGetUser(id, out _) == false)
             throw new NotFoundException(
                 new ExceptionParameter(id, nameof(id)));
         
         UserRepository.Remove(id);
     }
 
-    public void RemoveUser(string uname)
+    public void RemoveUser(string userName)
     {
+        if (TryGetUser(userName, out _) == false)
+            throw new NotFoundException(
+                new ExceptionParameter(userName, nameof(userName)));
+        
+        UserRepository.Remove(userName);
+    }
+
+    private bool TryGetUser(int id, out User? user)
+    {
+        user = null;
+        if (id < 0)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(id, nameof(id)));
+        
+        if (UserRepository.CheckIdUniqueness(id))
+            return false;
+        
+        user = UserRepository.GetById(id);
+        return true;
+    }
+    
+    private bool TryGetUser(string uname, out User? user)
+    {
+        user = null;
         if (uname == string.Empty)
             throw new InvalidArgumentException(
                 new ExceptionParameter(uname, nameof(uname)));
-
-        if (UserRepository.CheckNameUniqueness(uname))
-            throw new NotFoundException(
-                new ExceptionParameter(uname, nameof(uname)));
         
-        UserRepository.Remove(uname);
+        if (UserRepository.CheckNameUniqueness(uname))
+            return false;
+        
+        user = UserRepository.GetByUniqueName(uname);
+        return true;
     }
 }

@@ -1,4 +1,5 @@
 using ProtectVpnWeb.Core.Dto.Connection;
+using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Entities.Interfaces;
 using ProtectVpnWeb.Core.Exceptions;
@@ -78,6 +79,21 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
             connectionsDto[i] = connections[i].ToTransfer();
         }
         return connectionsDto;
+    }
+
+    public UserDto GetUserByConnection(int id)
+    {
+        if (id < 0)
+            throw new InvalidArgumentException(
+                new ExceptionParameter(id, nameof(id)));
+
+        if (ConnectionRepository.CheckIdUniqueness(id))
+            throw new NotFoundException(
+                new ExceptionParameter(id, nameof(id)));
+        
+        var connection = ConnectionRepository.GetById(id);
+        var user = ConnectionRepository.GetRelatedEntity(connection);
+        return user.ToTransfer();
     }
 
     public ConnectionDto CreateConnection(CreateConnectionDto dto)
