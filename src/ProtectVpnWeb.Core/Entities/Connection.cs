@@ -7,7 +7,7 @@ public sealed class Connection : IEntity, ITransfer<ConnectionDto>, IHasOneRelat
 {
     public int Id { get; }
     public int UserId { get; private set; }
-    public string? Info { get; private set; }
+    public string Info { get; private set; }
 
     public Connection(
         int id,
@@ -16,18 +16,16 @@ public sealed class Connection : IEntity, ITransfer<ConnectionDto>, IHasOneRelat
     {
         Id = id;
         UserId = userId;
-        Info = info;
+        Info = info ?? string.Empty;
     }
 
-    public ConnectionDto ToTransfer()
-    {
-        return new ConnectionDto
-        {
+    public ConnectionDto ToTransfer() =>
+        new () {
             Id = Id,
             UserId = UserId,
             Info = Info
         };
-    }
+    
 
     public void ChangeOf(ConnectionDto dto)
     {
