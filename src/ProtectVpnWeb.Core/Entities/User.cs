@@ -3,7 +3,8 @@ using ProtectVpnWeb.Core.Entities.Interfaces;
 
 namespace ProtectVpnWeb.Core.Entities;
 
-public sealed class User : IEntity, ITransfer<UserDto>, IHasUniqueName
+public sealed class User 
+    : IEntity, ITransfer<UserDto>, IHasUniqueName, IHasManyRelationships<Connection>
 {
     public int Id { get; }
 

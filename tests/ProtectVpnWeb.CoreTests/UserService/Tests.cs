@@ -1,4 +1,5 @@
 using ProtectVpnWeb.Core.Dto;
+using ProtectVpnWeb.Core.Dto.Connection;
 using ProtectVpnWeb.Core.Dto.User;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Exceptions;
@@ -20,6 +21,17 @@ public sealed class Tests
         new(3, "user4", "pwd4"),
         new(4, "user5", "pwd5")
     };
+    
+    private readonly Connection[] _fakeConnections =
+    {
+        new(0, 0, "IP=1"),
+        new(1, 0, "IP=1"),
+        new(2, 2, "IP=3"),
+        new(3, 3, "IP=4"),
+        new(4, 4, "IP=5"),
+        new(5, 0, "IP=6"),
+        new(6, 1, "IP=7")
+    };
 
     public Tests()
     {
@@ -33,7 +45,7 @@ public sealed class Tests
     [Test]
     public void Get_Success()
     {
-        _repository.FakeInit(_fakeUsers);
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
         var user = new UserDto { Id = 2, UniqueName = "user3" };
 
         var userOfId = _service.GetUser(user.Id);
@@ -50,11 +62,11 @@ public sealed class Tests
     [Test]
     public void GetRange_Success()
     {
-        _repository.FakeInit(_fakeUsers);
-        var users = new UserDto[]
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
+        var users = new[]
         {
-            new() { Id = 3, UniqueName = "user4" },
-            new() { Id = 4, UniqueName = "user5" }
+            _fakeUsers[3].ToTransfer(),
+            _fakeUsers[4].ToTransfer()
         };
 
         var userDtos = _service.GetUsersInRange(3, 2);
@@ -71,13 +83,13 @@ public sealed class Tests
     [Test]
     public void Edit_Success()
     {
-        _repository.FakeInit(_fakeUsers);
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
         var userOfId = new UserDto 
-            { Id = 0, UniqueName = "editUser1", Role = UserRoles.User.ToString()};
+            { Id = 3, UniqueName = "editUser3", Role = UserRoles.User.ToString()};
         var userOfUname = new UserDto 
             { Id = 1, UniqueName = "editUser2", Role = UserRoles.User.ToString()};
         var expected = new UserDto 
-            { Id = 0, UniqueName = "user2", Role = UserRoles.User.ToString()};
+            { Id = 3, UniqueName = "user2", Role = UserRoles.User.ToString()};
 
         _service.EditUser(expected.Id, userOfId);
         _service.EditUser(expected.UniqueName, userOfUname);
@@ -93,7 +105,7 @@ public sealed class Tests
     [Test]
     public void Create_Success()
     {
-        _repository.FakeInit(_fakeUsers);
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
         var newUser = new CreateUserDto
             { UniqueName = "user6", Role = UserRoles.Admin.ToString(), Password = "pwd6" };
         var hasher = new MockHashService("//hash");
@@ -111,7 +123,7 @@ public sealed class Tests
     [Test]
     public void Remove_Success()
     {
-        _repository.FakeInit(_fakeUsers);
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
         const int id = 3;
         const string uname = "user5";
 
@@ -126,9 +138,32 @@ public sealed class Tests
     }
 
     [Test]
+    public void GetConnectionsByUser_Success()
+    {
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
+        var user = _fakeUsers[0];
+        var connections = new[]
+        {
+            _fakeConnections[0].ToTransfer(),
+            _fakeConnections[1].ToTransfer(),
+            _fakeConnections[5].ToTransfer(),
+        };
+
+        var connectionsDtoById = _service.GetConnectionsByUser(user.Id);
+        var connectionsDtoByUname = _service.GetConnectionsByUser(user.UniqueName);
+
+        for (int i = 0; i < connectionsDtoById.Length; i++)
+            Assert.Multiple(() =>
+            {
+                Assert.That(connectionsDtoById[i].AreEqual(connections[i]), Is.True);
+                Assert.That(connectionsDtoByUname[i].AreEqual(connections[i]), Is.True);
+            });
+    }
+
+    [Test]
     public void Get_Exception()
     {
-        _repository.FakeInit(_fakeUsers);
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
 
         Assert.Catch<InvalidArgumentException>(delegate { _service.GetUser(-1); });
         Assert.Catch<InvalidArgumentException>(delegate { _service.GetUser(string.Empty); });
@@ -145,7 +180,7 @@ public sealed class Tests
     [Test]
     public void GetRange_Exception()
     {
-        _repository.FakeInit(_fakeUsers);
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
 
         Assert.Catch<InvalidArgumentException>(delegate
             { _service.GetUsersInRange(-1, 1); });
@@ -161,7 +196,7 @@ public sealed class Tests
     [Test]
     public void Edit_Exception()
     {
-        _repository.FakeInit(_fakeUsers);
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
 
         var dto = new UserDto
         {
@@ -195,7 +230,7 @@ public sealed class Tests
     [Test]
     public void Create_Exception()
     {
-        _repository.FakeInit(_fakeUsers);
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
 
         Assert.Catch<InvalidArgumentException>(delegate
         { _service.CreateUser(
@@ -218,7 +253,7 @@ public sealed class Tests
     [Test]
     public void Remove_Exception()
     {
-        _repository.FakeInit(_fakeUsers);
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
 
         Assert.Catch<InvalidArgumentException>(delegate { _service.RemoveUser(-1); });
         Assert.Catch<InvalidArgumentException>(delegate 
@@ -232,5 +267,27 @@ public sealed class Tests
         while (_repository.CheckNameUniqueness(uname) == false) uname = new Guid().ToString();
         Assert.Catch<NotFoundException>(delegate 
             { _service.RemoveUser(uname); });
+    }
+
+    [Test]
+    public void GetConnectionByUser_Exception()
+    {
+        _repository.FakeInit(_fakeUsers, _fakeConnections);
+        
+        Assert.Catch<InvalidArgumentException>(delegate 
+            { _service.GetConnectionsByUser(-1); });
+        
+        var id = _repository.Count;
+        while (_repository.CheckIdUniqueness(id) == false) id++;
+        Assert.Catch<NotFoundException>(delegate 
+            { _service.GetConnectionsByUser(id); });
+        
+        Assert.Catch<InvalidArgumentException>(delegate 
+            { _service.GetConnectionsByUser(string.Empty); });
+        
+        var uname = new Guid().ToString();
+        while (_repository.CheckNameUniqueness(uname) == false) uname = new Guid().ToString();
+        Assert.Catch<NotFoundException>(delegate 
+            { _service.GetConnectionsByUser(id); });
     }
 }

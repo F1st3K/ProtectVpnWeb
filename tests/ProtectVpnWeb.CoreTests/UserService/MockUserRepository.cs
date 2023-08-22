@@ -1,11 +1,14 @@
 using ProtectVpnWeb.Core.Entities;
+using ProtectVpnWeb.Core.Entities.Interfaces;
 using ProtectVpnWeb.Core.Repositories;
 
 namespace ProtectVpnWeb.CoreTests.UserService;
 
-public sealed class MockUserRepository : IRepository<User>, IUniqueNameRepository<User>
+public sealed class MockUserRepository : IRepository<User>, IUniqueNameRepository<User>,
+    IManyRelationshipsRepository<User, Connection>
 {
     private readonly List<User> _users = new();
+    private readonly List<Connection> _connections = new();
 
     public int Count { get; private set; }
     public int GetNextId()
@@ -77,16 +80,24 @@ public sealed class MockUserRepository : IRepository<User>, IUniqueNameRepositor
         }
     }
 
-    public void FakeInit(IEnumerable<User> users)
+    public void FakeInit(IEnumerable<User> users, IEnumerable<Connection> connections)
     {
         Clear();
-        foreach (var u in users)
-            Add(u);
+        foreach (var u in users) Add(u);
+        foreach (var c in connections) _connections.Add(c);
     }
     
     public void Clear()
     {
+        _connections.Clear();
         _users.Clear();
         Count = 0;
+    }
+
+    public Connection[] GetRelatedEntities(User source)
+    {
+        var connections = 
+            _connections.FindAll(connection => connection.UserId == source.Id);
+        return connections.ToArray();
     }
 }
