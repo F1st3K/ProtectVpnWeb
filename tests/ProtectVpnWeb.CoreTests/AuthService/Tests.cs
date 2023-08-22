@@ -27,6 +27,17 @@ public sealed class Tests
         new(3, "user4", "pwd4//hashed"),
         new(4, "user5", "pwd5//hashed")
     };
+    
+    private readonly Connection[] _fakeConnections =
+    {
+        new(0, 0, "IP=1"),
+        new(1, 0, "IP=1"),
+        new(2, 2, "IP=3"),
+        new(3, 3, "IP=4"),
+        new(4, 4, "IP=5"),
+        new(5, 0, "IP=6"),
+        new(6, 1, "IP=7")
+    };
 
     private readonly UserIdDto[] _fakeIdUsers = 
         { new() { Id = 2 }, new() { Id = 3 }, new() { Id = 4 } };
@@ -57,7 +68,7 @@ public sealed class Tests
     [Test]
     public void AuthUser_Success()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
         var authUser = new AuthUserDto{ UserName = "user1", Password = "pwd1" };
@@ -75,7 +86,7 @@ public sealed class Tests
     [Test]
     public void RegisterUser_Success()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
         var regUser = new AuthUserDto{ UserName = "user6", Password = "pwd6" };
@@ -93,7 +104,7 @@ public sealed class Tests
     [Test]
     public void ChangePassword_Success()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
         var changePwd = new ChangePwdDto
@@ -108,7 +119,7 @@ public sealed class Tests
     [Test]
     public void GetTokens_Success()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
         const string token = "token3";
@@ -134,7 +145,7 @@ public sealed class Tests
     [Test]
     public void RemoveRefreshToken_Success()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
         const string token = "token4";
@@ -147,7 +158,7 @@ public sealed class Tests
     [Test]
     public void ValidateAccessToken_Success()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
         const string token = "token5";
@@ -169,7 +180,7 @@ public sealed class Tests
     [Test]
     public void AuthUser_Exception()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
 
@@ -189,7 +200,7 @@ public sealed class Tests
     [Test]
     public void RegisterUser_Exception()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
         
@@ -205,7 +216,7 @@ public sealed class Tests
     [Test]
     public void ChangePassword_Exception()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
         
@@ -229,7 +240,7 @@ public sealed class Tests
     [Test]
     public void GetTokens_Exception()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(new []{ _fakeTokens[0] }, new []{ _fakeIdUsers[0] });
         
@@ -249,7 +260,7 @@ public sealed class Tests
     [Test]
     public void RemoveRefreshToken_Exception()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(new []{ _fakeTokens[0] }, new []{ _fakeIdUsers[0] });
 
@@ -263,7 +274,7 @@ public sealed class Tests
     [Test]
     public void ValidateAccessToken_Exception()
     {
-        _userRepository.FakeInit(_fakeUsers);
+        _userRepository.FakeInit(_fakeUsers, _fakeConnections);
         _tokenRepository.FakeInit(_fakeTokens);
         _tokenService.FakeInit(_fakeTokens, _fakeIdUsers);
         
