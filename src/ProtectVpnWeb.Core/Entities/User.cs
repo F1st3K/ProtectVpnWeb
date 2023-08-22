@@ -26,15 +26,12 @@ public sealed class User
         Role = role;
     }
 
-    public UserDto ToTransfer()
-    {
-        return new UserDto
-        {
+    public UserDto ToTransfer() =>
+        new () {
             Id = Id,
             UniqueName = UniqueName,
             Role = Role.ToString()
         };
-    }
 
     public void ChangeOf(UserDto dto)
     {
