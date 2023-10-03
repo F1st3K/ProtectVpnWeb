@@ -11,4 +11,9 @@
       <Folder Include="Wrappers\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ProtectVpnWeb.Core\ProtectVpnWeb.Core.csproj" />
+      <ProjectReference Include="..\ProtectVpnWeb.Data\ProtectVpnWeb.Data.csproj" />
+    </ItemGroup>
+
 </Project>
