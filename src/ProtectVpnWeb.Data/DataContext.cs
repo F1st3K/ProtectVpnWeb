@@ -8,6 +8,7 @@ public class DataContext : DbContext
 {
     public DbSet<UserEntity> Users { get; private set; }
     public DbSet<ConnectionEntity> Connections { get; private set; }
+    public DbSet<string> Tokens { get; private set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
