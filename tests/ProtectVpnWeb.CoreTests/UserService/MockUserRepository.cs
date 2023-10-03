@@ -32,7 +32,7 @@ public sealed class MockUserRepository : IRepository<User>, IUniqueNameRepositor
         Count++;
     }
 
-    public User GetById(int id)
+    public User Get(int id)
     {
         return _users.FirstOrDefault(user => user.Id == id);
     }
@@ -66,7 +66,7 @@ public sealed class MockUserRepository : IRepository<User>, IUniqueNameRepositor
         return _users.All(user => user.UniqueName != uname);
     }
 
-    public User GetByUniqueName(string uname)
+    public User Get(string uname)
     {
         return _users.FirstOrDefault(user => user.UniqueName == uname);
     }

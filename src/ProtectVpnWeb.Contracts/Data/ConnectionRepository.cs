@@ -41,7 +41,7 @@ public class ConnectionRepository : IRepository<Connection>,
         dbContext.SaveChanges();
     }
 
-    public Connection GetById(int id)
+    public Connection Get(int id)
     {
         using var dbContext = new DataContext();
         var connection = dbContext.Connections.First(connection => connection.Id == id);

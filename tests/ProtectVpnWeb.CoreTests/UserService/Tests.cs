@@ -40,7 +40,7 @@ public sealed class Tests
     }
 
     private bool CheckInRepository(UserDto dto) =>
-        _repository.GetById(dto.Id).ToTransfer().AreEqual(dto);
+        _repository.Get(dto.Id).ToTransfer().AreEqual(dto);
     
     [Test]
     public void Get_Success()
@@ -112,7 +112,7 @@ public sealed class Tests
 
         _service.CreateUser(newUser, hasher);
 
-        var user = _repository.GetByUniqueName(newUser.UniqueName);
+        var user = _repository.Get(newUser.UniqueName);
         Assert.Multiple(() =>
         {
             Assert.That(user.HashPassword, Is.EqualTo(hasher.GetHash(newUser.Password)));

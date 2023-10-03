@@ -31,7 +31,7 @@ public sealed class MockConnectionRepository : IRepository<Connection>,
         Count++;
     }
 
-    public Connection GetById(int id)
+    public Connection Get(int id)
     {
         return _connections.FirstOrDefault(connection => connection.Id == id);
     }

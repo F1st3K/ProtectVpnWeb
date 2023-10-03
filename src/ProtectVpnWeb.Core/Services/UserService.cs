@@ -155,7 +155,7 @@ public sealed class UserService<TRepository> : IUserService
         if (UserRepository.CheckIdUniqueness(id))
             return false;
         
-        user = UserRepository.GetById(id);
+        user = UserRepository.Get(id);
         return true;
     }
     
@@ -169,7 +169,7 @@ public sealed class UserService<TRepository> : IUserService
         if (UserRepository.CheckNameUniqueness(uname))
             return false;
         
-        user = UserRepository.GetByUniqueName(uname);
+        user = UserRepository.Get(uname);
         return true;
     }
 }

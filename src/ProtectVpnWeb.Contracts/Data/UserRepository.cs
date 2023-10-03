@@ -41,7 +41,7 @@ public sealed class UserRepository : IRepository<User>, IUniqueNameRepository<Us
         dbContext.SaveChanges();
     }
 
-    public User GetById(int id)
+    public User Get(int id)
     {
         using var dbContext = new DataContext();
         var user = dbContext.Users.First(user => user.Id == id);
@@ -76,7 +76,7 @@ public sealed class UserRepository : IRepository<User>, IUniqueNameRepository<Us
         return !dbContext.Users.Any(user => user.UniqueName == uname);
     }
 
-    public User GetByUniqueName(string uname)
+    public User Get(string uname)
     {
         using var dbContext = new DataContext();
         var user = dbContext.Users.First(user => user.UniqueName == uname);
