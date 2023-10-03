@@ -7,11 +7,20 @@ public class ConnectionMapper : IMapper<Connection, ConnectionEntity>
 {
     public Connection ToDomain(ConnectionEntity entity)
     {
-        throw new NotImplementedException();
+        return new Connection(
+            entity.Id,
+            entity.UserId,
+            entity.Info
+            );
     }
 
     public ConnectionEntity ToData(Connection domain)
     {
-        throw new NotImplementedException();
+        return new ConnectionEntity 
+        {
+            Id = domain.Id,
+            UserId = domain.UserId,
+            Info = domain.Info
+        };
     }
 }

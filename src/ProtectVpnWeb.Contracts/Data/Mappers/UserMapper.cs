@@ -7,11 +7,22 @@ public class UserMapper : IMapper<User, UserEntity>
 {
     public User ToDomain(UserEntity entity)
     {
-        throw new NotImplementedException();
+        return new User(
+            entity.Id,
+            entity.UniqueName,
+            entity.HashPassword,
+            Enum.Parse<UserRoles>(entity.Role)
+            );
     }
 
     public UserEntity ToData(User domain)
     {
-        throw new NotImplementedException();
+        return new UserEntity
+        {
+            Id = domain.Id,
+            UniqueName = domain.UniqueName,
+            HashPassword = domain.HashPassword,
+            Role = domain.Role.ToString()
+        };
     }
 }
