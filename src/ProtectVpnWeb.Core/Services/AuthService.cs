@@ -48,7 +48,7 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         if (UserRepository.CheckNameUniqueness(dto.UserName))
             throw new InvalidAuthenticationException();
         
-        var user = UserRepository.GetByUniqueName(dto.UserName);
+        var user = UserRepository.Get(dto.UserName);
         if (user.HashPassword != Hasher.GetHash(dto.Password))
             throw new InvalidAuthenticationException();
         
@@ -98,7 +98,7 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
         if (UserRepository.CheckNameUniqueness(dto.UserName))
             throw new InvalidAuthenticationException();
 
-        var user = UserRepository.GetByUniqueName(dto.UserName);
+        var user = UserRepository.Get(dto.UserName);
         if (user.HashPassword != Hasher.GetHash(dto.Password))
             throw new InvalidAuthenticationException();
         
@@ -126,7 +126,7 @@ public sealed class AuthService<TUserRepository, TRefreshTokenRepository, TToken
                 new ExceptionParameter(token, nameof(token)));
         
         var userIdDto = TokenService.ReadTokenPayload<UserIdDto>(token);
-        var userDto = UserRepository.GetById(userIdDto.Id).ToTransfer();
+        var userDto = UserRepository.Get(userIdDto.Id).ToTransfer();
         var userIdUnameRoleDto = new UserIdUnameRoleDto 
             { Id = userDto.Id, UniqueName = userDto.UniqueName, Role = userDto.Role};
         

@@ -43,7 +43,7 @@ public class Tests
     }
 
     private bool CheckInRepository(ConnectionDto dto) =>
-        _repository.GetById(dto.Id).ToTransfer().AreEqual(dto);
+        _repository.Get(dto.Id).ToTransfer().AreEqual(dto);
     
     private bool CheckInVpnManger(ConnectionDto dto) =>
         _vpnService.GetById(dto.Id).ToTransfer().ToTransfer().AreEqual(dto);
@@ -135,7 +135,7 @@ public class Tests
         Assert.Multiple(() =>
         {
             Assert.Catch<NotFoundException>(delegate { _service.GetConnection(id); });
-            Assert.That(_repository.GetById(id), Is.Null);
+            Assert.That(_repository.Get(id), Is.Null);
             Assert.That(_vpnService.GetById(id), Is.Null);
         });
     }

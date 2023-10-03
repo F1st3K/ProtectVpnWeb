@@ -149,7 +149,7 @@ public sealed class ConnectionService<TRepository, TClientConnection, TVpnManage
         if (ConnectionRepository.CheckIdUniqueness(id))
             return false;
 
-        connection = ConnectionRepository.GetById(id);
+        connection = ConnectionRepository.Get(id);
         return true;
     }
 }

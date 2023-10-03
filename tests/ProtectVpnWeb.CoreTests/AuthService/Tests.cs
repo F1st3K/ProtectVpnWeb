@@ -93,7 +93,7 @@ public sealed class Tests
 
         _service.RegisterUser(regUser);
 
-        var user = _userRepository.GetByUniqueName(regUser.UserName);
+        var user = _userRepository.Get(regUser.UserName);
         Assert.Multiple(() =>
         {
             Assert.That(user.HashPassword, Is.EqualTo(_hashService.GetHash(regUser.Password)));
@@ -112,7 +112,7 @@ public sealed class Tests
 
         _service.ChangePassword(changePwd);
 
-        var user = _userRepository.GetByUniqueName(changePwd.UserName);
+        var user = _userRepository.Get(changePwd.UserName);
         Assert.That(user.HashPassword, Is.EqualTo(_hashService.GetHash(changePwd.NewPassword)));
     }
 
