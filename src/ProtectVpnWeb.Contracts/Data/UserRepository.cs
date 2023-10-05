@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using ProtectVpnWeb.Contracts.Data.Mappers;
 using ProtectVpnWeb.Core.Entities;
 using ProtectVpnWeb.Core.Repositories;
@@ -11,91 +12,75 @@ public sealed class UserRepository : IRepository<User>, IUniqueNameRepository<Us
 {
     private readonly IMapper<User, UserEntity> _userMapper = new UserMapper();
     private readonly IMapper<Connection, ConnectionEntity> _connectionMapper = new ConnectionMapper();
+    private readonly DataContext _dbContext;
     
-    public int Count
+    public UserRepository(DbContextOptions<DataContext> options)
     {
-        get
-        {
-            using var dbContext = new DataContext();
-            return dbContext.Users.Count();
-        }
+        _dbContext = new DataContext(options);
     }
 
-    public int GetNextId()
-    {
-        using var dbContext = new DataContext();
-        return dbContext.Users.Max(user => user.Id) + 1;
-    }
+    public int Count => _dbContext.Users.Count();
 
-    public bool CheckIdUniqueness(int id)
-    {
-        using var dbContext = new DataContext();
-        return !dbContext.Users.Any(user => user.Id == id);
-    }
+    public int GetNextId() =>
+        _dbContext.Users.Max(user => user.Id) + 1;
+
+    public bool CheckIdUniqueness(int id) =>
+        !_dbContext.Users.Any(user => user.Id == id);
 
     public void Add(User entity)
     {
         var user = _userMapper.ToData(entity);
-        using var dbContext = new DataContext();
-        dbContext.Users.Add(user);
-        dbContext.SaveChanges();
+        _dbContext.Users.Add(user);
+        _dbContext.SaveChanges();
     }
 
     public User Get(int id)
     {
-        using var dbContext = new DataContext();
-        var user = dbContext.Users.First(user => user.Id == id);
+        var user = _dbContext.Users.First(user => user.Id == id);
         return _userMapper.ToDomain(user);
     }
 
     public User[] GetRange(int index, int count)
     {
-        using var dbContext = new DataContext();
-        var users = dbContext.Users.Skip(index).Take(count).ToList();
+        var users = _dbContext.Users.Skip(index).Take(count).ToList();
         return users.ConvertAll(user => _userMapper.ToDomain(user)).ToArray();
     }
 
     public void Update(User entity)
     {
         var user = _userMapper.ToData(entity);
-        using var dbContext = new DataContext();
-        dbContext.Users.Update(user);
-        dbContext.SaveChanges();
+        _dbContext.Users.Update(user);
+        _dbContext.SaveChanges();
     }
 
     public void Remove(int id)
     {
-        using var dbContext = new DataContext();
-        dbContext.Users.Remove(dbContext.Users.First(user => user.Id == id));
-        dbContext.SaveChanges();
+        _dbContext.Users.Remove(_dbContext.Users.First(user => user.Id == id));
+        _dbContext.SaveChanges();
     }
 
     public bool CheckNameUniqueness(string uname)
     {
-        using var dbContext = new DataContext();
-        return !dbContext.Users.Any(user => user.UniqueName == uname);
+        return !_dbContext.Users.Any(user => user.UniqueName == uname);
     }
 
     public User Get(string uname)
     {
-        using var dbContext = new DataContext();
-        var user = dbContext.Users.First(user => user.UniqueName == uname);
+        var user = _dbContext.Users.First(user => user.UniqueName == uname);
         return _userMapper.ToDomain(user);
     }
 
     public void Remove(string uname)
     {
-        using var dbContext = new DataContext();
-        dbContext.Users.Remove(dbContext.Users.First(user => user.UniqueName == uname));
-        dbContext.SaveChanges();
+        _dbContext.Users.Remove(_dbContext.Users.First(user => user.UniqueName == uname));
+        _dbContext.SaveChanges();
     }
 
     public Connection[] GetRelatedEntities(User source)
     {
-        using var dbContext = new DataContext();
         var user = _userMapper.ToData(source);
         var connections =
-            dbContext.Connections.Where(connection => connection.UserId == user.Id).ToList();
+            _dbContext.Connections.Where(connection => connection.UserId == user.Id).ToList();
         return connections.ConvertAll(connection => _connectionMapper.ToDomain(connection)).ToArray();
     }
 }
