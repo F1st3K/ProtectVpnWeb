@@ -1,5 +1,11 @@
-﻿services:
+﻿networks:
+  protectvpnweb.network:
+    driver: bridge
+
+services:
+  
   protectvpnweb.api:
+    container_name: asp-net
     image: protectvpnweb.api
     build:
       context: .
@@ -7,3 +13,19 @@
     ports:
       - 5000:80
       - 5001:443
+    networks:
+      - protectvpnweb.network
+    depends_on: 
+      - protectvpnweb.data
+  
+  protectvpnweb.data:
+    container_name: postgres
+    image: postgres:12
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: db
+    ports:
+      - "5432:5432"
+    networks:
+      - protectvpnweb.network
