@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using ProtectVpnWeb.Core.Entities;
+using ProtectVpnWeb.Core.Dto;
+using ProtectVpnWeb.Core.Dto.Connection;
 
 namespace ProtectVpnWeb.Api.Controllers;
 
@@ -22,9 +23,10 @@ public class ConnectionController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult AddConnection([FromQuery] string id)
+    public IActionResult AddConnection([FromQuery] CreateConnectionDto dto)
     {
-        return Ok(id);
+        
+        return Ok(dto);
     }
     
 }

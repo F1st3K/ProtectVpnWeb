@@ -1,9 +1,9 @@
 #!/bin/bash
 
 if [[ "$1" == "-i" ]]; then
-    bash build.sh -i
+    ./build.sh -i
 else
-    bash build.sh
+    ./build.sh
 fi
 
 cd ..

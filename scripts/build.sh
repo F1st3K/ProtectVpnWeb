@@ -4,11 +4,11 @@ cd ../src/ProtectVpnWeb.Api
 
 if [[ "$1" == "-i" ]]; then
     echo "run incremental build"
-    dotnet build --no-restore --incremental
+    ~/.dotnet/dotnet build --no-restore --incremental
 else
     echo "run build"
-    dotnet restore
-    dotnet build --no-restore
+    ~/.dotnet/dotnet restore
+    ~/.dotnet/dotnet build --no-restore
 fi
 
-dotnet publish -o ../../deploy
+~/.dotnet/dotnet publish -o ../../deploy
